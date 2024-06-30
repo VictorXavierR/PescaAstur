@@ -1,6 +1,7 @@
 package com.example.pescAstur.service;
 
 import com.example.pescAstur.model.User;
+import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
 import com.google.cloud.firestore.WriteResult;
@@ -40,6 +41,39 @@ public class FirestoreService {
         try {
             WriteResult result = db.collection("users").document(userId).set(userDetails).get();
             System.out.println("Write time : " + result.getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUserDetails(String userId, User user) {
+        Map<String, Object> userDetails = new HashMap<>();
+        userDetails.put("nombre", user.getNombre());
+        userDetails.put("apellido", user.getApellido());
+        userDetails.put("telefono", user.getTelefono());
+        userDetails.put("direccion", user.getDireccion());
+        userDetails.put("ciudad", user.getCiudad());
+        userDetails.put("provincia", user.getProvincia());
+        userDetails.put("codigoPostal", user.getCodigoPostal());
+        userDetails.put("pais", user.getPais());
+        userDetails.put("fechaNacimiento", user.getFechaNacimiento());
+        userDetails.put("fechaRegistro", user.getFechaRegistro());
+        userDetails.put("idiomaPreferido", user.getIdiomaPreferido());
+        userDetails.put("estadoCuenta", user.getEstadoCuenta());
+        userDetails.put("nombreUsuario", user.getUsername());
+
+        try {
+            WriteResult result = db.collection("users").document(userId).update(userDetails).get();
+            System.out.println("Update time : " + result.getUpdateTime());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteUserDetails(String userId) {
+        try {
+            ApiFuture<WriteResult> writeResult = db.collection("users").document(userId).delete();
+            System.out.println("Delete time : " + writeResult.get().getUpdateTime());
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
