@@ -8,10 +8,12 @@ import { FormsModule } from '@angular/forms';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireModule } from '@angular/fire/compat';
 import { firebaseConfig } from '../environments/environment';
+import { PasswordResetComponent } from './password-reset/password-reset.component';
 
 @NgModule({ declarations: [
         AppComponent,
         LoginComponent,
+        PasswordResetComponent,
     ],
     bootstrap: [AppComponent], 
     imports: [BrowserModule,

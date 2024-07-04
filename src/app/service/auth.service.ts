@@ -18,4 +18,7 @@ export class AuthService {
   logout(): Promise<any> {
     return this.afAuth.signOut();
   }
+  sendPasswordReset(email: string): Promise<void> {
+    return this.afAuth.sendPasswordResetEmail(email);
+  }
 }
