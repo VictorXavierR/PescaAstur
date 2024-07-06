@@ -9,11 +9,14 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireModule } from '@angular/fire/compat';
 import { firebaseConfig } from '../environments/environment';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
+import { CheckInComponent } from './check-in/check-in.component';
+
 
 @NgModule({ declarations: [
         AppComponent,
         LoginComponent,
         PasswordResetComponent,
+        CheckInComponent,
     ],
     bootstrap: [AppComponent], 
     imports: [BrowserModule,

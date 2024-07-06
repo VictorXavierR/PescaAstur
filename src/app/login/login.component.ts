@@ -86,4 +86,28 @@ export class LoginComponent implements OnInit{
       localStorage.removeItem('storedEmail');
     }
   }
+
+  loginWithGoogle() {
+    this.authService.loginWithGoogle().then(result => {
+      console.log('User signed in with Google:', result);
+    }).catch(error => {
+      console.error('Error signing in with Google:', error);
+    });
+  }
+
+  loginWithFacebook() {
+    this.authService.loginWithFacebook().then(result => {
+      console.log('User signed in with Facebook:', result);
+    }).catch(error => {
+      console.error('Error signing in with Facebook:', error);
+    });
+  }
+
+  loginWithTwitter() {
+    this.authService.loginWithTwitter().then(result => {
+      console.log('User signed in with Twitter:', result);
+    }).catch(error => {
+      console.error('Error signing in with Twitter:', error);
+    });
+  }
 }
