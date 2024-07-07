@@ -1,0 +1,78 @@
+.input-group-text {
+    display: flex;
+    align-items: center;
+}
+
+.form-control {
+    height: 100%;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+.input-with-icon .form-control {
+    padding-left: 30px; /* Ajusta este valor según el tamaño del ícono y el margen deseado */
+}
+/* Estilos personalizados para el datepicker */
+.bs-datepicker {
+    font-size: 14px; /* Tamaño de la fuente */
+}
+
+.bs-datepicker-container {
+    width: 250px; /* Ancho del contenedor del datepicker */
+}
+
+.input-group.date .form-control {
+    height: 36px; /* Altura del input */
+}
+/* Ajuste de posición del datepicker */
+.bs-datepicker-container {
+    top: 20px; /* Posición desde la parte superior */
+    left: 50%; /* Posición desde la izquierda */
+    transform: translateX(-50%); /* Centrar horizontalmente */
+}
+/* Estilos para cambiar el cursor en los días del calendario */
+.bs-datepicker-body table > tbody > tr > td.day:not(.disabled) {
+    cursor: pointer; /* Cambia el cursor a tipo botón */
+}
+/* Estilos para el marco de la imagen y el input */
+.input-with-preview {
+    display: flex;
+    align-items: center;
+}
+
+.image-preview-frame {
+    width: 100px; /* Ajusta el ancho del marco de la imagen según tus necesidades */
+    height: 100px; /* Ajusta la altura del marco de la imagen según tus necesidades */
+    object-fit: cover; /* Ajusta el tamaño y recorte de la imagen */
+    border: 2px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px; /* Espacio entre el marco de la imagen y el input */
+}
+.custom-file-label::after {
+    content: none; /* Oculta el texto "Ningún archivo seleccionado" */
+}
+
+.background-image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('../../assets/images/fondoregistro.jpg');
+    width: 100%;
+    height: 100%;
+}
+
+
+
+

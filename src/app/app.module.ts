@@ -10,7 +10,8 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { firebaseConfig } from '../environments/environment';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { CheckInComponent } from './check-in/check-in.component';
-
+import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -23,7 +24,9 @@ import { CheckInComponent } from './check-in/check-in.component';
               AppRoutingModule,
               FormsModule,
               AngularFireAuthModule,
-              AngularFireModule.initializeApp(firebaseConfig)
+              AngularFireModule.initializeApp(firebaseConfig),
+              BrowserAnimationsModule,
+              BsDatepickerModule.forRoot(),
             ], 
     providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
