@@ -17,6 +17,7 @@ public class FirebaseConfig {
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setStorageBucket("pescaastur-160f4.appspot.com")
                 .build();
 
         if (FirebaseApp.getApps().isEmpty()) {

@@ -4,6 +4,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class FirebaseUserService {
@@ -79,6 +81,23 @@ public class FirebaseUserService {
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * Autentica un usuario en Firebase Authentication.
+     * @param idToken Token de ID del usuario.
+     * @return Mensaje de confirmación.
+     */
+    @PostMapping("/authenticate")
+    public String authenticateUser(@RequestBody String idToken) {
+        try {
+            // Verificar el token de ID con Firebase Authentication
+            FirebaseAuth.getInstance().verifyIdToken(idToken);
+            return "Autenticación exitosa";
+        } catch (FirebaseAuthException e) {
+            e.printStackTrace();
+            return "Error de autenticación";
         }
     }
 }

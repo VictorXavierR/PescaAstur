@@ -4,12 +4,21 @@ import com.example.pescAstur.model.User;
 import com.example.pescAstur.service.FirebaseUserService;
 import com.example.pescAstur.service.FirestoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/api/users")
 public class UserController {
     @Autowired
     private FirebaseUserService firebaseUserService;
@@ -19,19 +28,45 @@ public class UserController {
 
     /**
      * Registra un nuevo usuario en Firebase Authentication y guarda sus detalles en Firestore.
-     * @param user Datos del usuario a registrar.
+     * @param file Archivo de imagen de perfil del usuario.
+     * @param userParams Mapa con los datos del usuario.
      * @return Mensaje de confirmación.
+     * @throws IOException Si ocurre un error al procesar el archivo de imagen.
      */
     @PostMapping("/register")
-    public String registerUser(@RequestBody User user) {
+    public ResponseEntity<Map<String, String>> registerUser(@RequestParam("file") MultipartFile file, @RequestParam Map<String, String> userParams) throws IOException, ParseException {
+
+        Map<String, String> response = new HashMap<>();
+        // Crear un nuevo objeto User a partir de los parámetros recibidos
+        User user = new User();
+        user.setNombre(userParams.get("nombre"));
+        user.setApellido(userParams.get("apellido"));
+        user.setTelefono(userParams.get("telefono"));
+        user.setDireccion(userParams.get("direccion"));
+        user.setCiudad(userParams.get("ciudad"));
+        user.setProvincia(userParams.get("provincia"));
+        user.setCodigoPostal(userParams.get("codigoPostal"));
+        user.setPais(userParams.get("pais"));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//Formato de fecha
+        user.setFechaNacimiento(sdf.parse(userParams.get("fechaNacimiento")));//Parsear la fecha
+        user.setFechaRegistro(sdf.parse(userParams.get("fechaRegistro")));//Parsear la fecha
+        user.setIdiomaPreferido(userParams.get("idiomaPreferido"));
+        user.setEstadoCuenta(userParams.get("estadoCuenta"));
+        user.setUserName(userParams.get("userName"));
+        user.setDNI(userParams.get("DNI"));
+        user.setFotoPerfil(file);  // Aquí se establece el MultipartFile directamente
+        user.setEmail(userParams.get("email"));
+        user.setPassword(userParams.get("password"));
         // Registrar el usuario en Firebase Authentication
         String userId = firebaseUserService.registerUser(user.getEmail(), user.getPassword());
         if (userId != null) {
             // Guardar detalles adicionales del usuario en Firestore
             firestoreService.saveUserDetails(userId, user);
-            return "Usuario registrado y detalles guardados en Firestore.";
+            response.put("message", "Usuario registrado correctamente y detalles guardados en firestore.");
+            return ResponseEntity.ok(response);
         } else {
-            return "Error al registrar el usuario.";
+            response.put("message", "Error al registrar el usuario.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 

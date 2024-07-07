@@ -2,16 +2,26 @@ package com.example.pescAstur.service;
 
 import com.example.pescAstur.model.User;
 import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.FirestoreOptions;
 import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.Bucket;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.cloud.StorageClient;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -23,7 +33,7 @@ public class FirestoreService {
         this.db = FirestoreClient.getFirestore(FirebaseApp.getInstance());
     }
 
-    public void saveUserDetails(String userId, User user) {
+    public void saveUserDetails(String userId, User user) throws IOException {
         Map<String, Object> userDetails = new HashMap<>();
         userDetails.put("nombre", user.getNombre());
         userDetails.put("apellido", user.getApellido());
@@ -37,6 +47,9 @@ public class FirestoreService {
         userDetails.put("fechaRegistro", user.getFechaRegistro());
         userDetails.put("idiomaPreferido", user.getIdiomaPreferido());
         userDetails.put("estadoCuenta", user.getEstadoCuenta());
+        userDetails.put("nombreUsuario", user.getUserName());
+        userDetails.put("DNI", user.getDNI());
+        userDetails.put("fotoPerfil", uploadProfilePhoto(user.getFotoPerfil(), userId));
 
         try {
             WriteResult result = db.collection("users").document(userId).set(userDetails).get();
@@ -46,7 +59,7 @@ public class FirestoreService {
         }
     }
 
-    public void updateUserDetails(String userId, User user) {
+    public void updateUserDetails(String userId, User user) throws IOException {
         Map<String, Object> userDetails = new HashMap<>();
         userDetails.put("nombre", user.getNombre());
         userDetails.put("apellido", user.getApellido());
@@ -60,7 +73,10 @@ public class FirestoreService {
         userDetails.put("fechaRegistro", user.getFechaRegistro());
         userDetails.put("idiomaPreferido", user.getIdiomaPreferido());
         userDetails.put("estadoCuenta", user.getEstadoCuenta());
-        userDetails.put("nombreUsuario", user.getUsername());
+        userDetails.put("nombreUsuario", user.getUserName());
+        userDetails.put("DNI", user.getDNI());
+        userDetails.put("fotoPerfil", uploadProfilePhoto(user.getFotoPerfil(), userId));
+
 
         try {
             WriteResult result = db.collection("users").document(userId).update(userDetails).get();
@@ -77,6 +93,35 @@ public class FirestoreService {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+    }
+    public String uploadProfilePhoto(MultipartFile file, String userId) throws IOException {
+        // Genera un nombre de archivo único para evitar colisiones
+        String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+
+        // Convierte MultipartFile a File temporal
+        File tempFile = convertToFile(file);
+        byte[] fileContent = Files.readAllBytes(tempFile.toPath());
+        String contentType = Files.probeContentType(tempFile.toPath());
+
+        // Sube el archivo a Firebase Storage
+        Bucket bucket = StorageClient.getInstance().bucket();
+        Blob blob = bucket.create(fileName, fileContent, contentType);
+
+        // Borra el archivo temporal después de subirlo
+        tempFile.delete();
+
+        // Obtén la URL de descarga
+        String downloadUrl = blob.getMediaLink();
+
+        return downloadUrl;
+    }
+
+    private File convertToFile(MultipartFile file) throws IOException {
+        File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
+        try (FileOutputStream fos = new FileOutputStream(convFile)) {
+            fos.write(file.getBytes());
+        }
+        return convFile;
     }
 
 }
