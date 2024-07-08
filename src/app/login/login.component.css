@@ -10,7 +10,4 @@
     display: flex; /* Usa el modelo de caja flexible */
     justify-content: center; /* Centra horizontalmente */
     align-items: center; /* Centra verticalmente */
-    filter: grayscale(30%); /* Convierte la imagen a escala de grises al 30% */
-    opacity: 0.8; /* Opacidad del 80% */
-    backdrop-filter: blur(5px); /* Aplica un desenfoque de fondo */
 }

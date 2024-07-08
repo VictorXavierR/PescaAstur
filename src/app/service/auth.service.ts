@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { firebaseConfig } from "../../environments/environment";
 import firebase from 'firebase/compat/app';
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -32,4 +32,9 @@ export class AuthService {
   loginWithTwitter() {
     return this.afAuth.signInWithPopup(new firebase.auth.TwitterAuthProvider());
   }
+
+  getAuthState(): Observable<any> {
+    return this.afAuth.authState;
+  }
+
 }

@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="assets/images/Logo.png" alt="Logo" style="width: 25px; margin-bottom: 5px;">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav me-5">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <img [src]="userImageUrl" alt="Logo" style="width: 25px; margin-bottom: 5px;">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown">
+                        <li *ngIf="!isLoggedIn"><a class="dropdown-item" [routerLink]="'/login'">Login</a></li>
+                        <li><a class="dropdown-item" href="#">Perfil del usuario</a></li>
+                        <li><a type="button" class="dropdown-item" (click)="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+

@@ -1,0 +1,13 @@
+.navbar-custom {
+    height: 30px; /* Ajusta esta altura según tus necesidades */
+  }
+  
+  .navbar-custom .navbar-brand,
+  .navbar-custom .nav-link,
+  .navbar-custom .form-control,
+  .navbar-custom .btn {
+    line-height: 30px; /* Ajusta esta altura según tus necesidades */
+    height: 30px; /* Asegúrate de que los elementos internos también se ajusten */
+    padding-top: 0;
+    padding-bottom: 0;
+  }
