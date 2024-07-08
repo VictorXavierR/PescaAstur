@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 @Component({
   selector: 'app-check-in',
   templateUrl: './check-in.component.html',
   styleUrl: './check-in.component.css'
 })
-export class CheckInComponent {
+export class CheckInComponent implements OnInit{
 
   name: string = '';
   email: string = '';
@@ -26,6 +26,7 @@ export class CheckInComponent {
   bsConfig: Partial<BsDatepickerConfig>;
   dni: string = '';
   provincia: string = '';
+  defaultImageUrl: string = 'assets/images/avatar.png';
 
   constructor() {
     this.bsConfig = {
@@ -36,7 +37,20 @@ export class CheckInComponent {
       this.profilePicture = new File([''], 'avatar.png', { type: 'image/png' });
     }
   }
-
+  ngOnInit(): void {
+    this.loadDefaultImage();
+  }
+  /**
+   * 
+   * @param event {Event} Evento de cambio de archivo
+   * @returns {void}
+   * @memberof CheckInComponent
+   * @description Se ejecuta cuando se selecciona un archivo en el input de tipo file.
+   * Lee el contenido del archivo seleccionado y lo muestra en un elemento HTMLImageElement.
+   * Si no se selecciona ningún archivo, no hace nada.
+   * Si ocurre un error al leer el archivo, se muestra un mensaje en la consola.
+   * Si no hay errores, muestra la imagen previsualizada en el elemento HTMLImageElement.
+   */
   onFileSelected(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     if (inputElement.files && inputElement.files.length > 0) {
@@ -59,6 +73,16 @@ export class CheckInComponent {
       reader.readAsDataURL(file);
     }
   }
+  /**
+   * @returns {void}
+   * @memberof CheckInComponent
+   * @description Registra un nuevo usuario en el sistema.
+   * Si algún campo del formulario no está completo, se muestra un mensaje de alerta.
+   * Si las contraseñas no coinciden, se muestra un mensaje de alerta.
+   * Si la fecha de nacimiento es mayor a la fecha actual, se muestra un mensaje de alerta.
+   * Si no hay errores, se envían los datos del formulario al servidor.
+   * Si ocurre un error al enviar los datos, se muestra un mensaje en la consola.
+   */
   register() {
     this.registerDate = new Date().toISOString().split('T')[0]; // Formato yyyy-MM-dd
     this.accountState = 'active';
@@ -115,6 +139,23 @@ export class CheckInComponent {
       .catch(error => {
         console.error(error);
       });
+  }
+  /**
+   * @returns {Promise<void>}
+   * @memberof CheckInComponent
+   * @description Carga la imagen predeterminada del servidor y la asigna a la propiedad profilePicture.
+   * Si ocurre un error, se muestra un mensaje en la consola.
+   * Si no hay errores, se muestra la imagen previsualizada en el elemento HTMLImageElement.
+   * Si no se puede cargar la imagen predeterminada, se muestra un mensaje en la consola.
+   */
+  async loadDefaultImage(): Promise<void> {
+    try {
+      const response = await fetch(this.defaultImageUrl);// Cargar la imagen predeterminada
+      const blob = await response.blob();// Convertir la imagen a un objeto Blob
+      this.profilePicture = new File([blob], 'avatar.png', { type: blob.type });// Crear un archivo a partir del objeto Blob
+    } catch (error) {
+      console.error('Error loading default image:', error);
+    }
   }
 
 }
