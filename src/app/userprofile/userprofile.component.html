@@ -1,0 +1,87 @@
+<section class="bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 mb-4 mb-sm-5">
+                <div class="card card-style1 border-0">
+                    <div class="card-body p-1-9 p-sm-2-3 p-md-6 p-lg-7">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 mb-4 mb-lg-0 d-flex justify-content-between align-items-center">
+                                <img [src]="user.fotoPerfil" alt="fotoPerfil"
+                                    style="max-height: 100px; max-width: 100px;">
+                                <button class="btn btn-primary ms-auto" (click)="editable()">
+                                    <i class="fas fa-edit"></i> Editar perfil
+                                </button>
+                            </div>
+                            <div class="col-lg-6 px-xl-10">
+                                <div class="bg-secondary d-lg-inline-block py-1-9 px-1-9 px-sm-6 mb-1-9 rounded">
+                                    <h3 class="h2 text-white mb-0">Nombre: {{user.nombre}}</h3>
+                                    <span class="text-primary">Nombre de usuario: {{user.nombreUsuario}}</span>
+                                </div>
+                                <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                                    <ul class="list-unstyled mb-1-9">
+                                        <li class="mb-2 mb-xl-3 display-28">
+                                            <label for="apellido"
+                                                class="display-26 text-secondary me-2 font-weight-600">Apellidos:</label>
+                                            <input id="apellido" formControlName="apellido" class="form-control" [disabled]="!perfilEditable"/>
+                                        </li>
+                                        <li class="mb-2 mb-xl-3 display-28">
+                                            <label for="DNI"
+                                                class="display-26 text-secondary me-2 font-weight-600">DNI:</label>
+                                            <input id="DNI" formControlName="DNI" class="form-control" [disabled]="!perfilEditable"/>
+                                        </li>
+                                        <li class="mb-2 mb-xl-3 display-28">
+                                            <label for="email"
+                                                class="display-26 text-secondary me-2 font-weight-600">Email:</label>
+                                            <input id="email" formControlName="email" class="form-control" [disabled]="!perfilEditable"/>
+                                        </li>
+                                        <li class="mb-2 mb-xl-3 display-28">
+                                            <label for="ciudad"
+                                                class="display-26 text-secondary me-2 font-weight-600">Ciudad:</label>
+                                            <input id="ciudad" formControlName="ciudad" class="form-control" [disabled]="!perfilEditable"/>
+                                        </li>
+                                        <li class="mb-2 mb-xl-3 display-28">
+                                            <label for="codigoPostal"
+                                                class="display-26 text-secondary me-2 font-weight-600">CP:</label>
+                                            <input id="codigoPostal" formControlName="codigoPostal"
+                                                class="form-control" [disabled]="!perfilEditable"/>
+                                        </li>
+                                        <li class="mb-2 mb-xl-3 display-28">
+                                            <label for="direccion"
+                                                class="display-26 text-secondary me-2 font-weight-600">Dirección:</label>
+                                            <input id="direccion" formControlName="direccion" class="form-control" [disabled]="!perfilEditable"/>
+                                        </li>
+                                        <li class="mb-2 mb-xl-3 display-28">
+                                            <label for="pais"
+                                                class="display-26 text-secondary me-2 font-weight-600">Pais:</label>
+                                            <input id="pais" formControlName="pais" class="form-control" [disabled]="!perfilEditable"/>
+                                        </li>
+                                        <li class="mb-2 mb-xl-3 display-28">
+                                            <label for="provincia"
+                                                class="display-26 text-secondary me-2 font-weight-600">Provincia:</label>
+                                            <input id="provincia" formControlName="provincia" class="form-control" [disabled]="!perfilEditable"/>
+                                        </li>
+                                        <li class="mb-2 mb-xl-3 display-28">
+                                            <label for="fechaNacimiento"
+                                                class="display-26 text-secondary me-2 font-weight-600">Fecha de
+                                                nacimiento:</label>
+                                            <input id="fechaNacimiento" formControlName="fechaNacimiento"
+                                                class="form-control" [disabled]="!perfilEditable"/>
+                                        </li>
+                                        <li class="mb-2 mb-xl-3 display-28">
+                                            <label for="telefono"
+                                                class="display-26 text-secondary me-2 font-weight-600">Telefono:</label>
+                                            <input id="telefono" formControlName="telefono" class="form-control" [disabled]="!perfilEditable"/>
+                                        </li>
+                                        <li class="display-28">
+                                            <button *ngIf="perfilEditable" type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                        </li>
+                                    </ul>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -4,7 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
@@ -15,6 +15,8 @@ import { CheckInComponent } from './check-in/check-in.component';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NavbarComponent } from './ui/navbar/navbar.component';
+import { UserprofileComponent } from './userprofile/userprofile.component';
+
 
 @NgModule({ declarations: [
         AppComponent,
@@ -22,6 +24,8 @@ import { NavbarComponent } from './ui/navbar/navbar.component';
         PasswordResetComponent,
         CheckInComponent,
         NavbarComponent,
+        UserprofileComponent,
+
     ],
     bootstrap: [AppComponent], 
     imports: [BrowserModule,
@@ -33,6 +37,7 @@ import { NavbarComponent } from './ui/navbar/navbar.component';
               BsDatepickerModule.forRoot(),
               AngularFirestoreModule,
               AngularFireStorageModule,
+              ReactiveFormsModule,
             ], 
     providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }

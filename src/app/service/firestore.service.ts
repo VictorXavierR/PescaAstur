@@ -15,4 +15,8 @@ export class FirestoreService {
       map((data: any) => data.fotoPerfil)
     );
   }
+
+  getUserData(uid: string): Observable<any> {
+    return this.firestore.collection('users').doc(uid).valueChanges();
+  }
 }
