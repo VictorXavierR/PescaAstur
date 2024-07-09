@@ -33,6 +33,12 @@ public class FirestoreService {
         this.db = FirestoreClient.getFirestore(FirebaseApp.getInstance());
     }
 
+    /**
+     * Guarda los detalles de un usuario en Firestore.
+     * @param userId
+     * @param user
+     * @throws IOException
+     */
     public void saveUserDetails(String userId, User user) throws IOException {
         Map<String, Object> userDetails = new HashMap<>();
         userDetails.put("nombre", user.getNombre());
@@ -59,6 +65,12 @@ public class FirestoreService {
         }
     }
 
+    /**
+     * Actualiza los detalles de un usuario en Firestore.
+     * @param userId
+     * @param user
+     * @throws IOException
+     */
     public void updateUserDetails(String userId, User user) throws IOException {
         Map<String, Object> userDetails = new HashMap<>();
         userDetails.put("nombre", user.getNombre());
@@ -86,6 +98,10 @@ public class FirestoreService {
         }
     }
 
+    /**
+     * Elimina los detalles de un usuario de Firestore.
+     * @param userId
+     */
     public void deleteUserDetails(String userId) {
         try {
             ApiFuture<WriteResult> writeResult = db.collection("users").document(userId).delete();
@@ -94,6 +110,14 @@ public class FirestoreService {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Sube una foto de perfil a Firebase Storage y devuelve la URL de descarga.
+     * @param file
+     * @param userId
+     * @return URL de descarga de la foto de perfil.
+     * @throws IOException
+     */
     public String uploadProfilePhoto(MultipartFile file, String userId) throws IOException {
         // Genera un nombre de archivo único para evitar colisiones
         String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
@@ -111,17 +135,32 @@ public class FirestoreService {
         tempFile.delete();
 
         // Obtén la URL de descarga
-        String downloadUrl = blob.getMediaLink();
+        String downloadUrl = generateDownloadUrl(blob);
 
         return downloadUrl;
     }
 
+    /**
+     * Convierte un MultipartFile a un archivo temporal.
+     * @param file Archivo a convertir.
+     * @return Archivo temporal.
+     * @throws IOException Si ocurre un error al procesar el archivo.
+     */
     private File convertToFile(MultipartFile file) throws IOException {
         File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
         try (FileOutputStream fos = new FileOutputStream(convFile)) {
             fos.write(file.getBytes());
         }
         return convFile;
+    }
+
+    /**
+     * Genera la URL de descarga de un archivo en Firebase Storage.
+     * @param blob Archivo en Firebase Storage.
+     * @return URL de descarga.
+     */
+    private String generateDownloadUrl(Blob blob) {
+        return blob.getName();
     }
 
 }
