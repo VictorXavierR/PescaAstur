@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { firebaseConfig } from '../environments/environment';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { CheckInComponent } from './check-in/check-in.component';
@@ -31,6 +32,7 @@ import { NavbarComponent } from './ui/navbar/navbar.component';
               BrowserAnimationsModule,
               BsDatepickerModule.forRoot(),
               AngularFirestoreModule,
+              AngularFireStorageModule,
             ], 
     providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
