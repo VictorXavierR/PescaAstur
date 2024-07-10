@@ -13,7 +13,7 @@ import { UserService } from '../../service/user.service';
 export class NavbarComponent {
   isLoggedIn: boolean = false;
   userImageUrl: string = 'assets/images/avatar.png';
-  user!:User;
+  user!: User;
   constructor(private authService: AuthService, private firestoreService: FirestoreService, private firestorageService: FirestorageService, private userService: UserService) {
     this.user = new User();
     // Verificar el estado de autenticación al inicializar el componente
@@ -25,13 +25,14 @@ export class NavbarComponent {
         this.loadUserImageUrl(uid);
         this.loadUserData(uid);
         this.user.email = user.email;
-        this.userService.setUser(this.user);
+        this.userService.setUser(this.user); 
       } else {
         // No hay usuario autenticado, restaura valores por defecto
         this.isLoggedIn = false;
         this.userImageUrl = 'assets/images/avatar.png';
       }
     });
+      
   }
   /**
    * @returns void
@@ -85,10 +86,10 @@ export class NavbarComponent {
         this.user.nombre = data.nombre;
         this.user.nombreUsuario = data.nombreUsuario;
         this.user.apellido = data.apellido;
-        this.user.ciudad= data.ciudad;
+        this.user.ciudad = data.ciudad;
         this.user.codigoPostal = data.codigoPostal;
         this.user.direccion = data.direccion;
-        this.user.fechaNacimiento= data.fechaNacimiento;
+        this.user.fechaNacimiento = data.fechaNacimiento;
         this.user.fechaRegistro = data.fechaRegistro;
         this.user.idiomaPreferido = data.idiomaPreferido;
         this.user.pais = data.pais;
@@ -100,4 +101,5 @@ export class NavbarComponent {
         console.error('Error al cargar los datos del usuario:', error);
       });
   }
+  
 }
