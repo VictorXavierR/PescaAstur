@@ -97,17 +97,41 @@ public class UserController {
 
     /**
      * Actualiza los detalles de un usuario en Firestore.
-     * @param user Datos del usuario a actualizar.
+     * @param fotoPerfil Archivo de imagen de perfil del usuario.
+     * @param userParams Mapa con los datos del usuario.
      * @return Mensaje de confirmación.
      */
     @PostMapping("/update-details")
-    public String updateUserDetails(@RequestBody User user) {
+    public ResponseEntity<String> updateUserDetails(@RequestParam("fotoPerfil") MultipartFile fotoPerfil,
+                                                    @RequestParam Map<String, String> userParams) {
         try {
-            String userId=firebaseUserService.getUserIdByEmail(user.getEmail());
+            // Construir el objeto User con los parámetros recibidos
+            User user = new User();
+            user.setUserName(userParams.get("userName"));
+            user.setEmail(userParams.get("email"));
+            user.setDNI(userParams.get("DNI"));
+            user.setTelefono(userParams.get("telefono"));
+            user.setDireccion(userParams.get("direccion"));
+            user.setCiudad(userParams.get("ciudad"));
+            user.setProvincia(userParams.get("provincia"));
+            user.setCodigoPostal(userParams.get("codigoPostal"));
+            user.setPais(userParams.get("pais"));
+            user.setFechaRegistro(new SimpleDateFormat("dd-MM-yyyy").parse(userParams.get("fechaRegistro")));
+            user.setEstadoCuenta(userParams.get("estadoCuenta"));
+            user.setIdiomaPreferido(userParams.get("idiomaPreferido"));
+            user.setFotoPerfil(fotoPerfil);
+            user.setNombre(userParams.get("nombre"));
+            user.setFechaNacimiento(new SimpleDateFormat("dd-MM-yyyy").parse(userParams.get("fechaNacimiento")));
+            user.setApellido(userParams.get("apellido"));
+
+            // Actualizar los detalles del usuario en la base de datos
+            String userId = firebaseUserService.getUserIdByEmail(user.getEmail()); // Asumiendo que tienes este método implementado
             firestoreService.updateUserDetails(userId, user);
-            return "Detalles del usuario actualizados.";
+
+            return ResponseEntity.ok("Detalles del usuario actualizados correctamente.");
         } catch (Exception e) {
-            return "Error al actualizar los detalles del usuario.";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error al actualizar los detalles del usuario: " + e.getMessage());
         }
     }
 
