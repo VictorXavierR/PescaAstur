@@ -50,7 +50,7 @@ export class UserprofileComponent implements OnInit {
   }
   onSubmit() {
     this.perfilEditable = false;
-    if (this.userForm.valid && this.fotoPerfil) {
+    if (this.userForm.valid) {
       const formData = new FormData(); // Crear un nuevo FormData para cada solicitud
 
       // Agregar cada campo del formulario al formData
@@ -59,9 +59,10 @@ export class UserprofileComponent implements OnInit {
         formData.append(key, formDataValues[key]);
       });
 
-      // Agregar la imagen de perfil al formData
-      formData.append('fotoPerfil', this.fotoPerfil);
-
+      if(this.fotoPerfil){
+        // Agregar la imagen de perfil al formData si se seleccionó una
+         formData.append('fotoPerfil', this.fotoPerfil);
+      }
       // Configurar la solicitud fetch
       const url = 'http://localhost:8080/api/users/update-details';
       const options: RequestInit = {
@@ -132,6 +133,6 @@ export class UserprofileComponent implements OnInit {
     const dia = String(date.getDate()).padStart(2, '0');
     const mes = String(date.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript son base 0
     const año = date.getFullYear();
-    return `${año}-${mes}-${dia}`;
+    return `${dia}-${mes}-${año}`;
  }
 }
