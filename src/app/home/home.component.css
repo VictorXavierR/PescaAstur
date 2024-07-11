@@ -1,0 +1,21 @@
+body, html {
+    height: 100%;
+    margin: 0;
+  }
+  
+  .background {
+    background-image: url('../../assets/images/fondoinicio.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;
+    padding: 20px; /* Ajusta según sea necesario */
+  }
+  
+  .container {
+    background: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
+    padding: 20px;
+    border-radius: 10px; /* Esquinas redondeadas */
+  }
+  
+  

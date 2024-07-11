@@ -16,6 +16,7 @@ import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NavbarComponent } from './ui/navbar/navbar.component';
 import { UserprofileComponent } from './userprofile/userprofile.component';
+import { HomeComponent } from './home/home.component';
 
 
 @NgModule({ declarations: [
@@ -25,6 +26,7 @@ import { UserprofileComponent } from './userprofile/userprofile.component';
         CheckInComponent,
         NavbarComponent,
         UserprofileComponent,
+        HomeComponent,
 
     ],
     bootstrap: [AppComponent], 
