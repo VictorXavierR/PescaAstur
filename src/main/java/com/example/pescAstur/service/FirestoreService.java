@@ -2,10 +2,7 @@ package com.example.pescAstur.service;
 
 import com.example.pescAstur.model.User;
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.FirestoreOptions;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.firebase.FirebaseApp;
@@ -28,8 +25,10 @@ import java.util.concurrent.ExecutionException;
 @DependsOn("initializeFirebase")
 public class FirestoreService {
     private final Firestore db;
+    private final FireStorageService fireStorageService;
 
-    public FirestoreService() {
+    public FirestoreService() throws IOException {
+        this.fireStorageService = new FireStorageService();
         this.db = FirestoreClient.getFirestore(FirebaseApp.getInstance());
     }
 
@@ -55,7 +54,7 @@ public class FirestoreService {
         userDetails.put("estadoCuenta", user.getEstadoCuenta());
         userDetails.put("nombreUsuario", user.getUserName());
         userDetails.put("DNI", user.getDNI());
-        userDetails.put("fotoPerfil", uploadProfilePhoto(user.getFotoPerfil(), userId));
+        userDetails.put("fotoPerfil", this.fireStorageService.uploadProfilePhoto(user.getFotoPerfil(), userId));
 
         try {
             WriteResult result = db.collection("users").document(userId).set(userDetails).get();
@@ -73,6 +72,15 @@ public class FirestoreService {
      */
     public void updateUserDetails(String userId, User user) throws IOException {
         Map<String, Object> userDetails = new HashMap<>();
+        String blobName = getProfilePhoto(userId);
+        if(blobName!=null){
+            if(user.getFotoPerfil()!=null){
+                this.fireStorageService.deleteFile(blobName);
+                userDetails.put("fotoPerfil", this.fireStorageService.uploadProfilePhoto(user.getFotoPerfil(), userId));
+            }else{
+                userDetails.put("fotoPerfil", blobName);
+            }
+        }
         userDetails.put("nombre", user.getNombre());
         userDetails.put("apellido", user.getApellido());
         userDetails.put("telefono", user.getTelefono());
@@ -87,8 +95,6 @@ public class FirestoreService {
         userDetails.put("estadoCuenta", user.getEstadoCuenta());
         userDetails.put("nombreUsuario", user.getUserName());
         userDetails.put("DNI", user.getDNI());
-        userDetails.put("fotoPerfil", uploadProfilePhoto(user.getFotoPerfil(), userId));
-
 
         try {
             WriteResult result = db.collection("users").document(userId).update(userDetails).get();
@@ -112,35 +118,6 @@ public class FirestoreService {
     }
 
     /**
-     * Sube una foto de perfil a Firebase Storage y devuelve la URL de descarga.
-     * @param file
-     * @param userId
-     * @return URL de descarga de la foto de perfil.
-     * @throws IOException
-     */
-    public String uploadProfilePhoto(MultipartFile file, String userId) throws IOException {
-        // Genera un nombre de archivo único para evitar colisiones
-        String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
-
-        // Convierte MultipartFile a File temporal
-        File tempFile = convertToFile(file);
-        byte[] fileContent = Files.readAllBytes(tempFile.toPath());
-        String contentType = Files.probeContentType(tempFile.toPath());
-
-        // Sube el archivo a Firebase Storage
-        Bucket bucket = StorageClient.getInstance().bucket();
-        Blob blob = bucket.create(fileName, fileContent, contentType);
-
-        // Borra el archivo temporal después de subirlo
-        tempFile.delete();
-
-        // Obtén la URL de descarga
-        String downloadUrl = generateDownloadUrl(blob);
-
-        return downloadUrl;
-    }
-
-    /**
      * Convierte un MultipartFile a un archivo temporal.
      * @param file Archivo a convertir.
      * @return Archivo temporal.
@@ -155,12 +132,26 @@ public class FirestoreService {
     }
 
     /**
-     * Genera la URL de descarga de un archivo en Firebase Storage.
-     * @param blob Archivo en Firebase Storage.
-     * @return URL de descarga.
+     * Obtiene la url de la foto de perfil de un usuario a partir de su ID.
+     * @param userId
+     * @return URL de la foto de perfil.
+     * @throws ExecutionException
+     * @throws InterruptedException
      */
-    private String generateDownloadUrl(Blob blob) {
-        return blob.getName();
+    public String getProfilePhoto(String userId) {
+        try {
+            DocumentReference docRef = db.collection("users").document(userId);
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            DocumentSnapshot document = future.get();
+            if (document.exists()) {
+                return document.getString("fotoPerfil");
+            } else {
+                System.out.println("No such document!");
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

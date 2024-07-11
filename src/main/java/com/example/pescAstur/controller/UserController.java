@@ -102,7 +102,7 @@ public class UserController {
      * @return Mensaje de confirmación.
      */
     @PostMapping("/update-details")
-    public ResponseEntity<String> updateUserDetails(@RequestParam("fotoPerfil") MultipartFile fotoPerfil,
+    public ResponseEntity<String> updateUserDetails(@RequestParam(required = false) MultipartFile fotoPerfil,
                                                     @RequestParam Map<String, String> userParams) {
         try {
             // Construir el objeto User con los parámetros recibidos
@@ -119,13 +119,17 @@ public class UserController {
             user.setFechaRegistro(new SimpleDateFormat("dd-MM-yyyy").parse(userParams.get("fechaRegistro")));
             user.setEstadoCuenta(userParams.get("estadoCuenta"));
             user.setIdiomaPreferido(userParams.get("idiomaPreferido"));
-            user.setFotoPerfil(fotoPerfil);
+            if(fotoPerfil!=null){
+                user.setFotoPerfil(fotoPerfil);
+            }else{
+                user.setFotoPerfil(null);
+            }
             user.setNombre(userParams.get("nombre"));
             user.setFechaNacimiento(new SimpleDateFormat("dd-MM-yyyy").parse(userParams.get("fechaNacimiento")));
             user.setApellido(userParams.get("apellido"));
 
             // Actualizar los detalles del usuario en la base de datos
-            String userId = firebaseUserService.getUserIdByEmail(user.getEmail()); // Asumiendo que tienes este método implementado
+            String userId = firebaseUserService.getUserIdByEmail(user.getEmail());
             firestoreService.updateUserDetails(userId, user);
 
             return ResponseEntity.ok("Detalles del usuario actualizados correctamente.");
