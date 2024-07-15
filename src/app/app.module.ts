@@ -17,6 +17,9 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NavbarComponent } from './ui/navbar/navbar.component';
 import { UserprofileComponent } from './userprofile/userprofile.component';
 import { HomeComponent } from './home/home.component';
+import { MapComponent } from './map/map.component';
+import {ChartModule} from 'primeng/chart';
+
 
 
 @NgModule({ declarations: [
@@ -27,6 +30,7 @@ import { HomeComponent } from './home/home.component';
         NavbarComponent,
         UserprofileComponent,
         HomeComponent,
+        MapComponent,
 
     ],
     bootstrap: [AppComponent], 
@@ -40,6 +44,7 @@ import { HomeComponent } from './home/home.component';
               AngularFirestoreModule,
               AngularFireStorageModule,
               ReactiveFormsModule,
+              ChartModule,
             ], 
     providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }

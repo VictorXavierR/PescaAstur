@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../service/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class LoginComponent implements OnInit{
   passwordFieldType: string = 'password';
   rememberMe: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     // Cargar estado del checkbox y correo desde localStorage al iniciar el componente
@@ -48,6 +49,7 @@ export class LoginComponent implements OnInit{
           // Usuario autenticado correctamente
           console.log('Inicio de sesión exitoso');
           this.generalError = '';
+          this.router.navigate(['/home']);
         })
         .catch(error => {
           // Manejo de errores de inicio de sesión

@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { CheckInComponent } from './check-in/check-in.component';
 import { UserprofileComponent } from './userprofile/userprofile.component';
 import { HomeComponent } from './home/home.component';
+import { MapComponent } from './map/map.component';
 
 const routes: Routes = [
   {path:'login',component:LoginComponent},
@@ -12,6 +13,8 @@ const routes: Routes = [
   {path:'check-in',component:CheckInComponent},
   {path:'userprofile',component:UserprofileComponent},
   {path:'home',component:HomeComponent},
+  {path:'map',component:MapComponent},
+  {path:'**',redirectTo:'home'},
 ];
 
 @NgModule({

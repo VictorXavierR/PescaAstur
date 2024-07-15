@@ -1,0 +1,20 @@
+
+/* Estilos adicionales */
+body, html, #map{
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.chart-container {
+    width: 100%;
+    height: 500px; /* Ajusta la altura según sea necesario */
+    position: relative;
+}
+.background {
+    background-image: url('../../assets/images/fondomapa.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;
+    padding: 0px; /* Ajusta según sea necesario */
+}
