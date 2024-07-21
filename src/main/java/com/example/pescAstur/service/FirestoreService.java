@@ -1,5 +1,6 @@
 package com.example.pescAstur.service;
 
+import com.example.pescAstur.model.Product;
 import com.example.pescAstur.model.User;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
@@ -16,9 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -145,6 +144,45 @@ public class FirestoreService {
             DocumentSnapshot document = future.get();
             if (document.exists()) {
                 return document.getString("fotoPerfil");
+            } else {
+                System.out.println("No such document!");
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Obtiene los productos de la base de datos products en Firestore.
+     * @return Lista de productos.
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public List<Product> getAllProducts() throws ExecutionException, InterruptedException {
+        ApiFuture<QuerySnapshot> future = db.collection("products").get();
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+        List<Product> products = new ArrayList<>();
+        for (QueryDocumentSnapshot document : documents) {
+            products.add(document.toObject(Product.class));
+        }
+        return products;
+    }
+
+    /**
+     * Obtiene la foto de un producto a partir de su ID.
+     * @param productId
+     * @return URL de la foto del producto.
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public String getProductPhoto(String productId) {
+        try {
+            DocumentReference docRef = db.collection("products").document(productId);
+            ApiFuture<DocumentSnapshot> future = docRef.get();
+            DocumentSnapshot document = future.get();
+            if (document.exists()) {
+                return document.getString("imagenURL");
             } else {
                 System.out.println("No such document!");
             }
