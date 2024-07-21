@@ -19,6 +19,7 @@ import { UserprofileComponent } from './userprofile/userprofile.component';
 import { HomeComponent } from './home/home.component';
 import { MapComponent } from './map/map.component';
 import {ChartModule} from 'primeng/chart';
+import { ProductlistComponent } from './productlist/productlist.component';
 
 
 
@@ -31,6 +32,7 @@ import {ChartModule} from 'primeng/chart';
         UserprofileComponent,
         HomeComponent,
         MapComponent,
+        ProductlistComponent,
 
     ],
     bootstrap: [AppComponent], 

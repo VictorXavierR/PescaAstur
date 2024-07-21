@@ -1,0 +1,11 @@
+.card-img-top {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+.card-img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px; /* Ajusta la altura según sea necesario */
+  }
