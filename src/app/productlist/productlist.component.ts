@@ -43,6 +43,6 @@ export class ProductlistComponent implements OnInit {
     }).format(price);
 
     // Devuelve el precio con el símbolo al final
-    return formattedPrice.replace('€', '') + ' €';
+    return formattedPrice.replace('€', '') + '€';
   }
 }

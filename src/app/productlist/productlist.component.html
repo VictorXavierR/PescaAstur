@@ -1,17 +1,62 @@
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-12 col-md-3 mb-4 mt-3" *ngFor="let product of products">
-            <div class="card h-100">
-                <div class="card-img-container">
-                    <img src="{{ product.imagenURL }}" class="card-img-top" alt="{{ product.nombre }}">
+        <!-- Barra de Filtros -->
+        <div class="col-12 col-md-3">
+            <div class="filters-container">
+                <h4 class="mb-3">Filtros</h4>
+                <div class="filter-item">
+                    <label for="filter-price">Precio</label>
+                    <input type="number" id="filter-price" name="price" min="0" max="1000" class="form-control-sm">
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title">{{ product.nombre }}</h5>
-                    <p class="card-text">Precio: {{ formatPrice(product.precio) }}€</p>
-                    <p class="card-text">Cantidad en stock: {{ product.cantidadStock }}</p>
+                <div class="filter-item">
+                    <label for="filter-stock">Cantidad en Stock</label>
+                    <input type="number" id="filter-stock" name="stock" min="0" max="1000" class="form-control-sm">
+                </div>
+                <div class="filter-item">
+                    <label for="filter-botas-vadeo">Botas de vadeo</label>
+                    <input type="checkbox" id="filter-botas-vadeo" name="botasVadeo">
+                </div>
+                <div class="filter-item">
+                    <label for="filter-anzuelos">Anzuelos</label>
+                    <input type="checkbox" id="filter-anzuelos" name="anzuelos">
+                </div>
+                <div class="filter-item">
+                    <label for="filter-cajas">Cajas</label>
+                    <input type="checkbox" id="filter-cajas" name="cajas">
+                </div>
+                <div class="filter-item">
+                    <label for="filter-carretes">Carretes</label>
+                    <input type="checkbox" id="filter-carretes" name="carretes">
+                </div>
+                <div class="filter-item">
+                    <label for="filter-vadeadores">Vadeadores</label>
+                    <input type="checkbox" id="filter-vadeadores" name="vadeadores">
+                </div>
+                <!-- Añade más filtros según tus necesidades -->
+            </div>
+        </div>
+
+        <!-- Lista de Productos -->
+        <div class="col-12 col-md-9">
+            <div class="row">
+                <div class="col-12 col-md-4 mb-4 mt-3" *ngFor="let product of products">
+                    <div class="card h-100">
+                        <div class="card-img-container">
+                            <img src="{{ product.imagenURL }}" class="card-img-top" alt="{{ product.nombre }}">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.nombre }}</h5>
+                            <p class="card-text">Precio: {{ formatPrice(product.precio) }}</p>
+                            <p class="card-text">Cantidad en stock: {{ product.cantidadStock }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
+
 

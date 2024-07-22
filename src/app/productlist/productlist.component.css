@@ -3,9 +3,59 @@
     height: 100px;
     object-fit: contain;
 }
+
 .card-img-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100px; /* Ajusta la altura según sea necesario */
-  }
+}
+
+.filters-container {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.filter-item {
+    margin-bottom: 15px;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.container-fluid {
+    padding: 0;
+}
+
+.row {
+    margin: 0;
+    padding: 0;
+}
+
+h4.mb-3 {
+    margin-top: 0; /* Para eliminar el margen superior y asegurar que los filtros comiencen justo debajo de la palabra "Filtros" */
+}
+
+.navbar {
+    height: 100%;
+    padding-top: 0px; /* Ajusta según sea necesario */
+}
+
+.navbar-brand {
+    margin-left: 0.5rem;
+    width: 100%;
+    text-align: center;
+}
+
+.navbar-nav {
+    flex-direction: column;
+    width: 100%;
+}
+
+.nav-item {
+    margin-bottom: 1rem;
+}
