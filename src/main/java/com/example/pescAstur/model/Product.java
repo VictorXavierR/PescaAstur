@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -18,9 +20,9 @@ public class Product {
     private String imagenURL;
     private String marca;
     private String nombre;
-    private int numeroDeReseñas;
     private String peso;
     private double precio;
-    private int rating;
+    private List<Integer> rating;
+    private List<String>comentarios;
     private String UID;
 }
