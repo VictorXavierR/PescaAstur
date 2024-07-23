@@ -10,10 +10,10 @@ export class Product {
     marca:string;
     modelo:string;
     nombre:string;
-    numeroDeReseñas:number;
     peso:string;
     precio:number;
-    rating:number;
+    rating:number[];
+    comentarios: string[];
 
     constructor(){
         this.cantidadStock = 0;
@@ -27,9 +27,9 @@ export class Product {
         this.marca = '';
         this.modelo = '';
         this.nombre = '';
-        this.numeroDeReseñas = 0;
         this.peso = '';
         this.precio = 0;
-        this.rating = 0;
+        this.rating =[];
+        this.comentarios = [];
     }
 }

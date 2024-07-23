@@ -20,6 +20,7 @@ import { HomeComponent } from './home/home.component';
 import { MapComponent } from './map/map.component';
 import {ChartModule} from 'primeng/chart';
 import { ProductlistComponent } from './productlist/productlist.component';
+import { ProductDetailsComponent } from './product-details/product-details.component';
 
 
 
@@ -33,6 +34,7 @@ import { ProductlistComponent } from './productlist/productlist.component';
         HomeComponent,
         MapComponent,
         ProductlistComponent,
+        ProductDetailsComponent,
 
     ],
     bootstrap: [AppComponent], 

@@ -1,0 +1,55 @@
+<div class="container justify-content-center">
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <img src="{{ product.imagenURL }}" class="img-fluid" alt="{{ product.nombre }}">
+        </div>
+        <div class="col-12 col-md-6">
+            <p>{{ product.descripcion }}</p>
+            <p>Precio: {{ formatPrice(product.precio) }}</p>
+            <p>Marca: {{ product.marca }}</p>
+            <p>Modelo: {{ product.modelo }}</p>
+            <p>Dimensiones: {{ product.dimensiones }}</p>
+            <p>Peso: {{ product.peso }}</p>
+            <p>Stock: {{ product.cantidadStock }}</p>
+            <div class="star-rating-sinCursor mb-2">
+                <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+                    <i class="fa-regular fa-star" [ngClass]="{
+                        'full-star': i < getAverageRating(product.rating), 
+                        'empty-Star': i >= getAverageRating(product.rating)
+                    }"></i>
+                </ng-container>
+            </div>
+            <button class="btn btn-primary" (click)="addToCart(product)">Añadir al carrito</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2>Comentarios:</h2>
+        </div>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h4>Añadir comentario</h4>
+                <textarea type="text" class="form-control" [(ngModel)]="newComment"
+                    placeholder="Escribe tu comentario aquí">
+                </textarea>
+                <h5>Valorar producto</h5>
+                <div class="star-rating mb-2">
+                    <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+                        <i class="fa-regular fa-star" [ngClass]="{
+                            'full-star': i < rating, 
+                            'empty-star': i >= rating
+                        }" (click)="setRating(i + 1)"></i>
+                    </ng-container>
+                </div>
+                <button class="btn btn-primary mt-2 mb-2" (click)="addComment(product)">Enviar comentario</button>
+                <div class="col-12" *ngFor="let comment of product.comentarios">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <p>{{ comment }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

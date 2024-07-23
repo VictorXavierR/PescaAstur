@@ -6,31 +6,55 @@
                 <h4 class="mb-3">Filtros</h4>
                 <div class="filter-item">
                     <label for="filter-price">Precio</label>
-                    <input type="number" id="filter-price" name="price" min="0" max="1000" class="form-control-sm">
+                    <input type="number" id="filter-price" name="price" min="0" max="1000" class="form-control-sm" [(ngModel)]="filters.price" (change)="applyFilters()">
                 </div>
                 <div class="filter-item">
                     <label for="filter-stock">Cantidad en Stock</label>
-                    <input type="number" id="filter-stock" name="stock" min="0" max="1000" class="form-control-sm">
+                    <input type="number" id="filter-stock" name="stock" min="0" max="1000" class="form-control-sm" [(ngModel)]="filters.stock" (change)="applyFilters()">
                 </div>
                 <div class="filter-item">
                     <label for="filter-botas-vadeo">Botas de vadeo</label>
-                    <input type="checkbox" id="filter-botas-vadeo" name="botasVadeo">
+                    <input type="checkbox" id="filter-botas-vadeo" name="botasVadeo" [(ngModel)]="filters.botasVadeo" (change)="applyFilters()">
                 </div>
                 <div class="filter-item">
                     <label for="filter-anzuelos">Anzuelos</label>
-                    <input type="checkbox" id="filter-anzuelos" name="anzuelos">
+                    <input type="checkbox" id="filter-anzuelos" name="anzuelos" [(ngModel)]="filters.anzuelos" (change)="applyFilters()">
                 </div>
                 <div class="filter-item">
                     <label for="filter-cajas">Cajas</label>
-                    <input type="checkbox" id="filter-cajas" name="cajas">
+                    <input type="checkbox" id="filter-cajas" name="cajas" [(ngModel)]="filters.cajas" (change)="applyFilters()">
                 </div>
                 <div class="filter-item">
                     <label for="filter-carretes">Carretes</label>
-                    <input type="checkbox" id="filter-carretes" name="carretes">
+                    <input type="checkbox" id="filter-carretes" name="carretes" [(ngModel)]="filters.carretes" (change)="applyFilters()">
                 </div>
                 <div class="filter-item">
                     <label for="filter-vadeadores">Vadeadores</label>
-                    <input type="checkbox" id="filter-vadeadores" name="vadeadores">
+                    <input type="checkbox" id="filter-vadeadores" name="vadeadores" [(ngModel)]="filters.vadeadores" (change)="applyFilters()">
+                </div>
+                <div class="filter-item">
+                    <label for="filter-sacaderas">Sacaderas</label>
+                    <input type="checkbox" id="filter-sacaderas" name="sacaderas" [(ngModel)]="filters.sacaderas" (change)="applyFilters()">
+                </div>
+                <div class="filter-item">
+                    <label for="filter-hilos-de-pesca">Hilos de pesca</label>
+                    <input type="checkbox" id="filter-hilos" name="hilos-de-pesca" [(ngModel)]="filters.hilos" (change)="applyFilters()">
+                </div>
+                <div class="filter-item">
+                    <label for="filter-canias">Cañas de pescar</label>
+                    <input type="checkbox" id="filter-canias" name="canias" [(ngModel)]="filters.canias" (change)="applyFilters()">
+                </div>
+                <div class="filter-item">
+                    <label for="filter-flotadores">Flotadores</label>
+                    <input type="checkbox" id="filter-flotadores" name="flotadores" [(ngModel)]="filters.flotadores" (change)="applyFilters()">
+                </div>
+                <div class="filter-item">
+                    <label for="filter-botas-altas">Botas altas</label>
+                    <input type="checkbox" id="filter-botas-altas" name="botas-altas" [(ngModel)]="filters.botasAltas" (change)="applyFilters()">
+                </div>
+                <div class="filter-item">
+                    <label for="filter-chalecos">Chalecos</label>
+                    <input type="checkbox" id="filter-chalecos" name="chalecos" [(ngModel)]="filters.chalecos" (change)="applyFilters()">
                 </div>
                 <!-- Añade más filtros según tus necesidades -->
             </div>
@@ -39,8 +63,8 @@
         <!-- Lista de Productos -->
         <div class="col-12 col-md-9">
             <div class="row">
-                <div class="col-12 col-md-4 mb-4 mt-3" *ngFor="let product of products">
-                    <div class="card h-100">
+                <div class="col-12 col-md-4 mb-4 mt-3" *ngFor="let product of filteredProducts">
+                    <div class="card h-100 card-clickable" (click)="setProduct(product)">
                         <div class="card-img-container">
                             <img src="{{ product.imagenURL }}" class="card-img-top" alt="{{ product.nombre }}">
                         </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../service/product.service';
 import { Product } from '../model/product';
 import { FirestorageService } from '../service/firestorage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-productlist',
@@ -10,7 +11,25 @@ import { FirestorageService } from '../service/firestorage.service';
 })
 export class ProductlistComponent implements OnInit {
   products: Product[] = [];
-  constructor(private productService: ProductService, private firestorage: FirestorageService) { }
+  filteredProducts: Product[]= [];
+  filters = {
+    price: null,
+    stock: null,
+    botasVadeo: false,
+    anzuelos: false,
+    cajas: false,
+    carretes: false,
+    vadeadores: false,
+    sacaderas: false,
+    hilos: false,
+    canias: false,
+    flotadores: false,
+    botasAltas: false,
+    chalecos: false
+  };
+
+
+  constructor(private productService: ProductService, private firestorage: FirestorageService, private router : Router) { }
 
   ngOnInit(): void {
     this.productService.getAllProducts().subscribe(data => {
@@ -28,7 +47,9 @@ export class ProductlistComponent implements OnInit {
           }
         });
       });
+      this.filteredProducts = this.products;
     });
+    
   }
 
   formatPrice(price: number): string {
@@ -44,5 +65,30 @@ export class ProductlistComponent implements OnInit {
 
     // Devuelve el precio con el símbolo al final
     return formattedPrice.replace('€', '') + '€';
+  }
+
+  applyFilters(): void {
+    this.filteredProducts=this.products.filter(product => {
+      return (
+        (this.filters.price === null || product.precio <= this.filters.price) &&
+        (this.filters.stock === null || product.cantidadStock >= this.filters.stock) &&
+        (!this.filters.botasVadeo || product.categoria.includes('botas de vadeo')) &&
+        (!this.filters.anzuelos || product.categoria.includes('anzuelos')) &&
+        (!this.filters.cajas || product.categoria.includes('cajas')) &&
+        (!this.filters.carretes || product.categoria.includes('carretes')) &&
+        (!this.filters.vadeadores || product.categoria.includes('vadeadores')) &&
+        (!this.filters.sacaderas || product.categoria.includes('sacaderas')) &&
+        (!this.filters.hilos || product.categoria.includes('hilos de pesca')) &&
+        (!this.filters.canias || product.categoria.includes('cañas de pescar')) &&
+        (!this.filters.flotadores || product.categoria.includes('flotadores')) &&
+        (!this.filters.botasAltas || product.categoria.includes('botas altas')) &&
+        (!this.filters.chalecos || product.categoria.includes('chalecos'))
+      );
+    });
+  }
+
+  setProduct(product: Product): void {
+    this.productService.setProduct(product);
+    this.router.navigate(['/product-details']);
   }
 }

@@ -1,0 +1,28 @@
+.star-rating {
+    font-size: 2em; /* Tamaño de las estrellas */
+    display: inline-flex; /* Muestra las estrellas en línea */
+    color: black; /* Color del borde */
+    cursor: pointer; /* Cambia el cursor al pasar sobre las estrellas */
+}
+
+.star-rating {
+    cursor: pointer; /* Cambia el cursor al pasar sobre las estrellas */
+    margin-right: 0.1em; /* Espacio entre estrellas */
+}
+
+.star-rating-sinCursor {
+    cursor: default; /* Mantiene el cursor por defecto */
+    font-size: 2em; /* Tamaño de las estrellas */
+    display: inline-flex; /* Muestra las estrellas en línea */
+    color: black; /* Color del borde */
+}
+
+.full-star {
+    color: gold; /* Color dorado para estrellas llenas */
+}
+
+.empty-star {
+    color: black; /* Color blanco para estrellas vacías */
+}
+
+

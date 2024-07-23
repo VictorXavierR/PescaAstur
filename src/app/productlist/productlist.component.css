@@ -59,3 +59,7 @@ h4.mb-3 {
 .nav-item {
     margin-bottom: 1rem;
 }
+
+.card-clickable {
+    cursor: pointer;
+}
