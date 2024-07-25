@@ -10,7 +10,7 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:4200") // Reemplaza con la URL de tu frontend Angular
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos HTTP permitidos
+                .allowedMethods("GET", "POST", "PUT","PATCH","DELETE", "OPTIONS") // Métodos HTTP permitidos
                 .allowedHeaders("*") // Todos los encabezados permitidos
                 .allowCredentials(true); // Permitir credenciales (cookies, tokens)
     }

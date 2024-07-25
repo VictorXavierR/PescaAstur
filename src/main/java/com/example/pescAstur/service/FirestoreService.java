@@ -164,7 +164,9 @@ public class FirestoreService {
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         List<Product> products = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
-            products.add(document.toObject(Product.class));
+            Product product = document.toObject(Product.class);
+            product.setUID(document.getId()); // Asigna el UID del documento al producto
+            products.add(product);
         }
         return products;
     }
@@ -190,6 +192,34 @@ public class FirestoreService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Añade un comentario a un documento en Firestore.
+     * @param documentId
+     * @param comment
+     * @return Fecha de actualización.
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public String addCommentToComments(String documentId,String comment) throws ExecutionException, InterruptedException {
+        WriteResult writeResult = db.collection("products").document(documentId)
+                .update("comentarios", FieldValue.arrayUnion(comment)).get();
+        return writeResult.getUpdateTime().toString();
+    }
+
+    /**
+     * Añade una valoracion a un documento en Firestore.
+     * @param documentId
+     * @param rating
+     * @return Fecha de actualización.
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    public String addRatingToRatings(String documentId,int rating) throws ExecutionException, InterruptedException {
+        WriteResult writeResult = db.collection("products").document(documentId)
+                .update("rating", FieldValue.arrayUnion(rating)).get();
+        return writeResult.getUpdateTime().toString();
     }
 
 }
