@@ -21,6 +21,7 @@ import { MapComponent } from './map/map.component';
 import {ChartModule} from 'primeng/chart';
 import { ProductlistComponent } from './productlist/productlist.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
+import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 
 
 
@@ -35,6 +36,7 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
         MapComponent,
         ProductlistComponent,
         ProductDetailsComponent,
+        ShoppingCartComponent,
 
     ],
     bootstrap: [AppComponent], 

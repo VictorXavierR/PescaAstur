@@ -8,6 +8,7 @@ import { HomeComponent } from './home/home.component';
 import { MapComponent } from './map/map.component';
 import { ProductlistComponent } from './productlist/productlist.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
+import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 
 const routes: Routes = [
   {path:'login',component:LoginComponent},
@@ -18,6 +19,7 @@ const routes: Routes = [
   {path:'map',component:MapComponent},
   {path:'productlist',component:ProductlistComponent},
   {path:'product-details',component:ProductDetailsComponent},
+  {path:'cart',component:ShoppingCartComponent},
   {path:'**',redirectTo:'home'},
 ];
 

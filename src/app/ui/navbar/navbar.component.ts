@@ -1,21 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../service/auth.service';
 import { FirestoreService } from '../../service/firestore.service';
 import { FirestorageService } from '../../service/firestorage.service';
 import { User } from '../../model/user';
 import { UserService } from '../../service/user.service';
+import { ProductService } from '../../service/product.service';
+import { CartService } from '../../service/cart.service';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   isLoggedIn: boolean = false;
   userImageUrl: string = 'assets/images/avatar.png';
   user!: User;
-  constructor(private authService: AuthService, private firestoreService: FirestoreService, private firestorageService: FirestorageService, private userService: UserService) {
-    this.user = new User();
+  cartSize: number = 0;
+
+  constructor(private authService: AuthService, private firestoreService: FirestoreService, private firestorageService: FirestorageService, private userService: UserService, private cartService: CartService) {
+    this.user = new User();  
+  }
+
+  ngOnInit(): void {
     // Verificar el estado de autenticación al inicializar el componente
     this.authService.getAuthState().subscribe(user => {
       if (user) {
@@ -32,8 +39,11 @@ export class NavbarComponent {
         this.userImageUrl = 'assets/images/avatar.png';
       }
     });
-      
+    // Actualizar el tamaño del carrito al inicializar el componente
+      this.cartSize = this.cartService.getShoppingCart().length;
+    
   }
+
   /**
    * @returns void
    * @memberof NavbarComponent
@@ -101,5 +111,7 @@ export class NavbarComponent {
         console.error('Error al cargar los datos del usuario:', error);
       });
   }
+
+
   
 }

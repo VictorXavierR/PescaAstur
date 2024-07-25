@@ -20,17 +20,25 @@
             </ul>
             <ul class="navbar-nav me-5">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown">
                         <img [src]="userImageUrl" alt="Logo" style="width: 25px; margin-bottom: 5px;">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown">
                         <li *ngIf="!isLoggedIn"><a class="dropdown-item" [routerLink]="'/login'">Login</a></li>
-                        <li *ngIf="isLoggedIn"><a class="dropdown-item" [routerLink]="'/userprofile'">Perfil del usuario</a></li>
-                        <li *ngIf="isLoggedIn"><a type="button" class="dropdown-item" (click)="logout()" [routerLink]="'/login'">Logout</a></li>
+                        <li *ngIf="isLoggedIn"><a class="dropdown-item" [routerLink]="'/userprofile'">Perfil del
+                                usuario</a></li>
+                        <li *ngIf="isLoggedIn"><a type="button" class="dropdown-item" (click)="logout()"
+                                [routerLink]="'/login'">Logout</a></li>
                     </ul>
+                </li>
+                <li><button routerLink="/cart" class="btn btn-link p-0">
+                        <i class="fas fa-shopping-cart"></i> <!-- Asegúrate de tener Font Awesome o un ícono similar -->
+                        <span class="badge badge-light">{{ cartSize }}</span>
+                        <!-- Para mostrar la cantidad de productos -->
+                    </button>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
-
