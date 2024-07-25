@@ -37,14 +37,43 @@ export class ProductDetailsComponent implements OnInit {
     const total = ratings.reduce((sum, rating) => sum + rating, 0);
     return ratings.length ? Math.round(total / ratings.length) : 0;
   }
-  rateProduct(product: any, rating: number) {
+  rateProduct(product: Product, rating: number) {
     product.rating.push(rating);
   }
-  addComment(product: any) {
-    product.comentarios.push(this.newComment);
-    this.newComment = '';
+  addComment(product: Product) {
+    if(this.newComment !== '') {
+      product.comentarios.push(this.newComment);
+      this.addCommentToProduct(product);
+      this.newComment = '';
+    }
+    if (this.rating!==0) {
+      product.rating.push(this.rating);
+      this.addRatingToProduct(product);
+      this.rating = 0;
+    } 
   }
   setRating(rating: number) {
     this.rating = rating;
+  }
+  addCommentToProduct(product: Product) {
+    console.log(product)
+    this.productService.addCommentToProduct(product).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+  addRatingToProduct(product: Product) {
+    this.productService.addRatingToProduct(product).subscribe(
+      (data) => {
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 }
