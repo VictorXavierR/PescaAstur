@@ -3,6 +3,8 @@ import { ProductService } from '../service/product.service';
 import { Product } from '../model/product';
 import { FirestorageService } from '../service/firestorage.service';
 import { Router } from '@angular/router';
+import { CartService } from '../service/cart.service';
+
 
 @Component({
   selector: 'app-productlist',
@@ -11,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class ProductlistComponent implements OnInit {
   products: Product[] = [];
-  filteredProducts: Product[]= [];
+  filteredProducts: Product[] = [];
   filters = {
     price: null,
     stock: null,
@@ -28,8 +30,7 @@ export class ProductlistComponent implements OnInit {
     chalecos: false
   };
 
-
-  constructor(private productService: ProductService, private firestorage: FirestorageService, private router : Router) { }
+  constructor(private productService: ProductService, private firestorage: FirestorageService, private router: Router, private cartService: CartService) { }
 
   ngOnInit(): void {
     this.productService.getAllProducts().subscribe(data => {
@@ -46,10 +47,11 @@ export class ProductlistComponent implements OnInit {
             console.error('Error al cargar la imagen:', err);
           }
         });
+        product.cantidad = 0;
       });
       this.filteredProducts = this.products;
     });
-    
+
   }
 
   formatPrice(price: number): string {
@@ -68,7 +70,7 @@ export class ProductlistComponent implements OnInit {
   }
 
   applyFilters(): void {
-    this.filteredProducts=this.products.filter(product => {
+    this.filteredProducts = this.products.filter(product => {
       return (
         (this.filters.price === null || product.precio <= this.filters.price) &&
         (this.filters.stock === null || product.cantidadStock >= this.filters.stock) &&
@@ -90,5 +92,27 @@ export class ProductlistComponent implements OnInit {
   setProduct(product: Product): void {
     this.productService.setProduct(product);
     this.router.navigate(['/product-details']);
+  }
+
+  addToCart(product: Product, event: Event): void {
+    event.stopPropagation();
+    if(product.cantidad > 0){
+      this.cartService.addProductToCart(product);
+    } 
+  }
+
+  incrementQuantity(event: Event, product: Product) {
+    event.stopPropagation();
+    if(product.cantidadStock > product.cantidad){
+        product.cantidad++;
+    }
+    
+  }
+  decrementQuantity(event: Event, product: Product) {
+    event.stopPropagation();
+    if (product.cantidad > 1){
+      product.cantidad--;
+    } 
+    
   }
 }

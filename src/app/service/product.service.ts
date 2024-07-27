@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Product } from '../model/product';
 import { Observable } from 'rxjs';
-import { ProductWithQuantity } from '../model/product-with-quantity';
+
 
 @Injectable({
   providedIn: 'root'

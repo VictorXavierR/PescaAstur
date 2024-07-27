@@ -15,6 +15,7 @@ export class Product {
     rating:number[];
     comentarios: string[];
     UID: string;
+    cantidad: number;
 
     constructor(){
         this.cantidadStock = 0;
@@ -33,5 +34,6 @@ export class Product {
         this.rating =[];
         this.comentarios = [];
         this.UID = '';
+        this.cantidad = 0;
     }
 }

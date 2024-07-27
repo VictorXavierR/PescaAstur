@@ -72,6 +72,12 @@
                             <h5 class="card-title">{{ product.nombre }}</h5>
                             <p class="card-text">Precio: {{ formatPrice(product.precio) }}</p>
                             <p class="card-text">Cantidad en stock: {{ product.cantidadStock }}</p>
+                            <div class="quantity-controls">
+                                <button (click)="decrementQuantity($event,product)">-</button>
+                                <span>{{product.cantidad}}</span>
+                                <button (click)="incrementQuantity($event,product)">+</button>
+                            </div>
+                            <button class="btn ms-1" style="background-color: orangered; color: white;" (click)="addToCart(product,$event)"><b>Agregar al Carrito</b></button> 
                         </div>
                     </div>
                 </div>

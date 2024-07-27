@@ -22,6 +22,7 @@ import {ChartModule} from 'primeng/chart';
 import { ProductlistComponent } from './productlist/productlist.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
+import { CheckOutComponent } from './check-out/check-out.component';
 
 
 
@@ -37,6 +38,7 @@ import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
         ProductlistComponent,
         ProductDetailsComponent,
         ShoppingCartComponent,
+        CheckOutComponent,
 
     ],
     bootstrap: [AppComponent], 

@@ -9,6 +9,7 @@ import { MapComponent } from './map/map.component';
 import { ProductlistComponent } from './productlist/productlist.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
+import { CheckOutComponent } from './check-out/check-out.component';
 
 const routes: Routes = [
   {path:'login',component:LoginComponent},
@@ -20,6 +21,7 @@ const routes: Routes = [
   {path:'productlist',component:ProductlistComponent},
   {path:'product-details',component:ProductDetailsComponent},
   {path:'cart',component:ShoppingCartComponent},
+  {path:'checkOut',component:CheckOutComponent},
   {path:'**',redirectTo:'home'},
 ];
 

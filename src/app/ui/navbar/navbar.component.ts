@@ -40,7 +40,9 @@ export class NavbarComponent implements OnInit {
       }
     });
     // Actualizar el tamaño del carrito al inicializar el componente
-      this.cartSize = this.cartService.getShoppingCart().length;
+    this.cartService.getShoppingCart().subscribe(products => {
+      this.cartSize = products.length;
+    });
     
   }
 

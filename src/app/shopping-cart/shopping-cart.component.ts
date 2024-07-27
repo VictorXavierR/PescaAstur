@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../service/cart.service';
-import { ProductWithQuantity } from '../model/product-with-quantity';
+import { Product } from '../model/product';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -9,16 +9,17 @@ import { ProductWithQuantity } from '../model/product-with-quantity';
 })
 export class ShoppingCartComponent implements OnInit {
 
-  products: ProductWithQuantity[] = [];
+  products: Product[] = [];
   subtotal: number = 0;
   total: number = 0;
 
   constructor(private CartService: CartService) { }
 
   ngOnInit(): void {
-    this.products = this.CartService.getShoppingCart();
-    this.subtotal = this.calcularSubtotal();
-    
+    this.CartService.getShoppingCart().subscribe((products: Product[]) => {
+      this.products = products;
+      this.subtotal = this.calcularSubtotal();
+    });
   }
 
   calcularPrecio(precio: number, cantidad: number): number {
@@ -26,9 +27,15 @@ export class ShoppingCartComponent implements OnInit {
   }
 
   calcularSubtotal(): number {
-    return this.products.reduce((sum, product) => sum + this.calcularPrecio(product.product.precio, product.quantity), 0);
+    return this.products.reduce((sum, product) => sum + this.calcularPrecio(product.precio, product.cantidad), 0);
+  }
+  
+  ordenarPrecio(){
+    this.products = this.products.sort((a, b) => a.precio - b.precio);
   }
 
-
+  borrarProducto(product: Product) {
+    this.CartService.deleteProductFromCart(product);
+  }
 
 }
