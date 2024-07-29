@@ -79,4 +79,16 @@ export class CartService {
   getTotal() {
     return this.shoppingCart.reduce((sum, product) => sum + product.precio * product.cantidad, 0);
   }
+   /**
+   * Genera un string con los detalles de los productos
+   * @returns string
+   * @memberof ShoppingCartComponent
+   */
+   genereteDetails(){
+    let details = '';
+    this.shoppingCart.forEach(product => {
+      details += `${product.nombre} - ${product.cantidad} unidades - $${product.precio}€ c/u\n`;
+    });
+    return details;
+  }
 }
