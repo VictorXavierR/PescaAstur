@@ -14,6 +14,13 @@ export class UserService {
     this.user = user;
   }
   getUser(){
-    return this.user;
+    if(this.user){
+      return this.user;
+    }else{
+      this.user = new User();
+      return this.user;
+    }
+
+    
   }
 }

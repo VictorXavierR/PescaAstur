@@ -28,27 +28,89 @@
                                             </div>
                                             <div class="ms-2">
                                                 <form [formGroup]="userForm">
-                                                    <input type="text" name="nombre" formControlName="nombre" class="form-control form-control-sm mb-1" [readonly]="!editarDatos" />
-                                                    <input type="text" name="DNI" formControlName="DNI" class="form-control form-control-sm mb-1" [readonly]="!editarDatos" />
-                                                    <input type="text" name="email" formControlName="email" class="form-control form-control-sm mb-1" [readonly]="!editarDatos" />
-                                                    <input type="number" name="telefono" formControlName="telefono" class="form-control form-control-sm mb-1" [readonly]="!editarDatos" />
-                                                    <input type="text" name="direccion" formControlName="direccion" class="form-control form-control-sm mb-1" [readonly]="!editarDatos" />
-                                                    <input type="text" name="codigoPostal" formControlName="codigoPostal" class="form-control form-control-sm mb-1" [readonly]="!editarDatos" />
-                                                    <input type="text" name="pais" formControlName="pais" class="form-control form-control-sm mb-1" [readonly]="!editarDatos" />
-                                                    <input type="text" name="provincia" formControlName="provincia" class="form-control form-control-sm mb-1" [readonly]="!editarDatos" />
+                                                    <input type="text" name="nombre" formControlName="nombre"
+                                                        class="form-control form-control-sm mb-1" />
+                                                    <input type="text" name="DNI" formControlName="DNI"
+                                                        class="form-control form-control-sm mb-1" />
+
+                                                    <input type="text" name="email" formControlName="email"
+                                                        class="form-control form-control-sm mb-1" />
+
+                                                    <input type="number" name="telefono" formControlName="telefono"
+                                                        class="form-control form-control-sm mb-1" />
+
+                                                    <input type="text" name="direccion" formControlName="direccion"
+                                                        class="form-control form-control-sm mb-1" />
+
+                                                    <input type="text" name="codigoPostal"
+                                                        formControlName="codigoPostal"
+                                                        class="form-control form-control-sm mb-1" />
+
+                                                    <input type="text" name="pais" formControlName="pais"
+                                                        class="form-control form-control-sm mb-1" />
+
+                                                    <input type="text" name="provincia" formControlName="provincia"
+                                                        class="form-control form-control-sm mb-1" />
+
                                                 </form>
                                             </div>
-                                            <button class="btn btn-primary ms-auto" (click)="editable()">
-                                                <i class="fas fa-edit"></i> Editar datos
-                                            </button>
-                                        </div>
-                                        <div class="d-flex justify-content-between mt-4" *ngIf="editarDatos">
-                                            <button class="btn btn-danger me-2" (click)="cancelar()">
-                                                <i class="fas fa-times"></i> Cancelar
-                                            </button>
-                                            <button class="btn btn-primary" (click)="guardarDatos()">
-                                                <i class="fas fa-save"></i> Guardar cambios
-                                            </button>
+                                            <div class="ms-2">
+                                                <div *ngIf="userForm.get('nombre')?.touched && userForm.get('nombre')?.invalid"
+                                                    class="text-danger mb-3">
+                                                    <small *ngIf="userForm.get('nombre')?.errors?.['required']">El
+                                                        nombre es obligatorio.</small>
+                                                </div>
+
+                                                <div *ngIf="userForm.get('DNI')?.touched && userForm.get('DNI')?.invalid"
+                                                    class="text-danger mb-2">
+                                                    <small *ngIf="userForm.get('DNI')?.errors?.['required']">El DNI es
+                                                        obligatorio.</small>
+                                                    <small *ngIf="userForm.get('DNI')?.errors?.['dniInvalido']">El DNI
+                                                        debe tener 8 dígitos seguidos de una letra.</small>
+                                                </div>
+
+                                                <div *ngIf="userForm.get('email')?.touched && userForm.get('email')?.invalid"
+                                                    class="text-danger mb-2">
+                                                    <small *ngIf="userForm.get('email')?.errors?.['required']">El email
+                                                        es obligatorio.</small>
+                                                    <small *ngIf="userForm.get('email')?.errors?.['email']">El formato
+                                                        del email no es válido.</small>
+                                                </div>
+
+                                                <div *ngIf="userForm.get('telefono')?.touched && userForm.get('telefono')?.invalid"
+                                                    class="text-danger mb-3">
+                                                    <small *ngIf="userForm.get('telefono')?.errors?.['required']">El
+                                                        teléfono es obligatorio.</small>
+                                                    <small *ngIf="userForm.get('telefono')?.errors?.['pattern']">El
+                                                        teléfono debe tener 9 dígitos.</small>
+                                                </div>
+
+                                                <div *ngIf="userForm.get('direccion')?.touched && userForm.get('direccion')?.invalid"
+                                                    class="text-danger mb-2">
+                                                    <small *ngIf="userForm.get('direccion')?.errors?.['required']">La
+                                                        dirección es obligatoria.</small>
+                                                </div>
+
+                                                <div *ngIf="userForm.get('codigoPostal')?.touched && userForm.get('codigoPostal')?.invalid"
+                                                    class="text-danger mb-2">
+                                                    <small *ngIf="userForm.get('codigoPostal')?.errors?.['required']">El
+                                                        código postal es obligatorio.</small>
+                                                    <small *ngIf="userForm.get('codigoPostal')?.errors?.['pattern']">El
+                                                        código postal debe tener 5 dígitos.</small>
+                                                </div>
+
+                                                <div *ngIf="userForm.get('pais')?.touched && userForm.get('pais')?.invalid"
+                                                    class="text-danger mb-3">
+                                                    <small *ngIf="userForm.get('pais')?.errors?.['required']">El país es
+                                                        obligatorio.</small>
+                                                </div>
+
+                                                <div *ngIf="userForm.get('provincia')?.touched && userForm.get('provincia')?.invalid"
+                                                    class="text-danger mb-2">
+                                                    <small *ngIf="userForm.get('provincia')?.errors?.['required']">La
+                                                        provincia es obligatoria.</small>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -71,40 +133,84 @@
                                         <button href="#!" type="submit" class="text-white btn btn-link p-0"><i
                                                 class="fab fa-cc-paypal fa-2x"></i></button>
 
-                                        <form class="mt-4">
+                                        <form [formGroup]="userForm" class="mt-4">
                                             <div data-mdb-input-init class="form-outline form-white mb-4">
-                                                <input type="text" id="typeName" name="cardHoldersName" class="form-control form-control-lg"
-                                                    siez="17" placeholder="Cardholder's Name" [ngModel]="titularTarjeta" />
-                                                <label class="form-label" for="typeName">Cardholder's Name</label>
+                                                <input type="text" id="typeName" formControlName="titularTarjeta"
+                                                    class="form-control form-control-lg"
+                                                    placeholder="Nombre Apellidos" />
+                                                <label class="form-label" for="typeName">Titular de la tarjeta</label>
+                                                <div *ngIf="userForm.get('titularTarjeta')?.touched && userForm.get('titularTarjeta')?.invalid"
+                                                    class="text-danger">
+                                                    <small
+                                                        *ngIf="userForm.get('titularTarjeta')?.errors?.['required']">El
+                                                        titular de la tarjeta es obligatorio.</small>
+                                                </div>
                                             </div>
 
                                             <div data-mdb-input-init class="form-outline form-white mb-4">
-                                                <input type="text" id="typeText" name="cardNumber" class="form-control form-control-lg"
-                                                    siez="17" placeholder="1234 5678 9012 3457" minlength="19"
-                                                    maxlength="19" [ngModel]="numeroTarjeta"/>
-                                                <label class="form-label" for="typeText">Card Number</label>
+                                                <input type="text" id="typeTarjeta" formControlName="numeroTarjeta"
+                                                    class="form-control form-control-lg"
+                                                    placeholder="1234 5678 9012 3457"
+                                                    (input)="formatearNumeroTarjeta($event)" />
+                                                <label class="form-label" for="typeText">Número de la tarjeta</label>
+                                                <div *ngIf="userForm.get('numeroTarjeta')?.touched && userForm.get('numeroTarjeta')?.invalid"
+                                                    class="text-danger">
+                                                    <small
+                                                        *ngIf="userForm.get('numeroTarjeta')?.errors?.['required']">El
+                                                        número de la tarjeta es obligatorio.</small>
+                                                    <small *ngIf="userForm.get('numeroTarjeta')?.errors?.['pattern']">El
+                                                        número de la tarjeta debe tener 16 dígitos.</small>
+                                                </div>
                                             </div>
 
                                             <div class="row mb-4">
                                                 <div class="col-md-6">
                                                     <div data-mdb-input-init class="form-outline form-white">
-                                                        <input type="text" id="typeExp" name="expiration"
-                                                            class="form-control form-control-lg" placeholder="MM/YYYY"
-                                                            size="7" id="exp" minlength="7" maxlength="7" [ngModel]="fechaExpiracion"/>
-                                                        <label class="form-label" for="typeExp">Expiration</label>
+                                                        <input type="text" id="typeExp"
+                                                            formControlName="fechaExpiracion"
+                                                            class="form-control form-control-lg"
+                                                            placeholder="MM/YYYY" />
+                                                        <label class="form-label" for="typeExp">Fecha de
+                                                            expiración</label>
+                                                        <div *ngIf="userForm.get('fechaExpiracion')?.touched && userForm.get('fechaExpiracion')?.invalid"
+                                                            class="text-danger">
+                                                            <small
+                                                                *ngIf="userForm.get('fechaExpiracion')?.errors?.['required']">La
+                                                                fecha de expiración es obligatoria.</small>
+                                                            <small
+                                                                *ngIf="userForm.get('fechaExpiracion')?.errors?.['fechaInvalida']">La
+                                                                fecha de expiración no es válida.</small>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div data-mdb-input-init class="form-outline form-white">
-                                                        <input type="password" id="typeText" name="cvv"
+                                                        <input type="password" id="typeCvv"
+                                                            formControlName="codigoSeguridad"
                                                             class="form-control form-control-lg"
-                                                            placeholder="&#9679;&#9679;&#9679;" size="1" minlength="3"
-                                                            maxlength="3" [ngModel]="codigoSeguridad"/>
-                                                        <label class="form-label" for="typeText">Cvv</label>
+                                                            placeholder="&#9679;&#9679;&#9679;" />
+                                                        <label class="form-label" for="typeText">CVV</label>
+                                                        <div *ngIf="userForm.get('codigoSeguridad')?.touched && userForm.get('codigoSeguridad')?.invalid"
+                                                            class="text-danger">
+                                                            <small
+                                                                *ngIf="userForm.get('codigoSeguridad')?.errors?.['required']">El
+                                                                CVV es obligatorio.</small>
+                                                            <!-- Mensaje cuando la longitud mínima no se cumple -->
+                                                            <small
+                                                                *ngIf="userForm.get('codigoSeguridad')?.errors?.['minlength']">
+                                                                El código de seguridad debe tener al menos 3 caracteres.
+                                                            </small>
+
+                                                            <!-- Mensaje cuando la longitud máxima se supera -->
+                                                            <small
+                                                                *ngIf="userForm.get('codigoSeguridad')?.errors?.['maxlength']">
+                                                                El código de seguridad no puede tener más de 3
+                                                                caracteres.
+                                                            </small>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </form>
 
                                         <hr class="my-4">
