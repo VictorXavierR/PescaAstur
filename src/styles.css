@@ -2,4 +2,60 @@
 @import 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css';
 @import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css';
 @import 'leaflet/dist/leaflet.css';
+/* Clase para el contenedor oscuro del datepicker */
+.theme-dark {
+    background-color: #343a40; /* Color de fondo oscuro */
+    color: #ffffff; /* Color del texto */
+}
+
+/* Estilos específicos para el datepicker */
+.theme-dark .bs-datepicker {
+    background-color: #343a40; /* Color de fondo del calendario */
+    color: #ffffff; /* Color del texto del calendario */
+}
+
+/* Cambiar el color de los días del calendario */
+.theme-dark .bs-datepicker td,
+.theme-dark .bs-datepicker td.active {
+    color: #ffffff; /* Color del texto de los días */
+}
+
+.theme-dark .bs-datepicker td.active {
+    background-color: #007bff; /* Color de fondo del día activo */
+}
+
+.theme-dark .bs-datepicker td:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Color de fondo al pasar el mouse */
+}
+
+/* Cambiar el color de los días no seleccionables */
+.theme-dark .bs-datepicker td.disabled {
+    color: rgba(255, 255, 255, 0.5); /* Color de texto para días no seleccionables */
+}
+
+/* Cambiar el color de los encabezados */
+.theme-dark .bs-datepicker .dow {
+    background-color: #495057; /* Fondo de los encabezados */
+    color: #ffffff; /* Color del texto de los encabezados */
+}
+/* Cambiar el cursor a pointer al pasar el mouse sobre los días del calendario */
+.theme-dark .bs-datepicker td {
+    cursor: pointer !important; /* Cambiar el cursor a pointer */
+}
+/* Asegúrate de que el cursor también se aplique al <span> dentro del <td> */
+.theme-dark .bs-datepicker td span {
+    cursor: pointer !important; /* Forzar el cursor a pointer */
+}
+
+/* Cambiar el color de fondo al pasar el mouse */
+.theme-dark .bs-datepicker td:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Color de fondo al pasar el mouse */
+}
+
+/* Cambiar el color de fondo del día activo */
+.theme-dark .bs-datepicker td.active {
+    background-color: #007bff; /* Color de fondo del día activo */
+}
+
+
 

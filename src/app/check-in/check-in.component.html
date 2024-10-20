@@ -1,5 +1,5 @@
 <div class="container background-image">
-    <form action="" id="wizard">
+    <form [formGroup]="registerForm" action="" id="wizard">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="form-group" style="margin-top: 10px;">
@@ -26,107 +26,209 @@
                     <div class="form-holder">
                         <div class="input-with-icon">
                             <i class="fas fa-user"></i>
-                            <input name="name" type="text" class="form-control" placeholder="Nombre" [(ngModel)]="name">
+                            <input name="name" type="text" class="form-control" placeholder="Nombre"
+                                formControlName="nombre">
+                        </div>
+                        <div *ngIf="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched">
+                            <small *ngIf="registerForm.get('nombre')?.errors?.['required']" class="text-danger">
+                                El nombre es requerido.
+                            </small>
                         </div>
                     </div>
                     <div class="form-holder" style="margin-top: 10px;">
                         <div class="input-with-icon">
                             <i class="fas fa-user"></i>
                             <input name="lastName" type="text" class="form-control" placeholder="Apellidos"
-                                [(ngModel)]="lastName">
+                                formControlName="apellidos">
                         </div>
-                    </div>
-                    <div class="form-holder" style="margin-top: 10px;">
-                        <div class="input-with-icon">
-                            <i class="fas fa-user"></i>
-                            <input name="dni" type="text" class="form-control" placeholder="DNI" [(ngModel)]="dni">
-                        </div>
-                    </div>
-                    <div class="form-holder" style="margin-top: 10px;">
-                        <div class="input-with-icon">
-                            <i class="fas fa-user"></i>
-                            <input name="userName" type="text" class="form-control" placeholder="Nombre de usuario"
-                                [(ngModel)]="userName">
-                        </div>
-                    </div>
-                    <div class="form-holder" style="margin-top: 10px;">
-                        <div class="input-with-icon">
-                            <i class="fas fa-lock"></i>
-                            <input name="password" type="password" class="form-control" placeholder="Contraseña"
-                                [(ngModel)]="password">
-                        </div>
-                    </div>
-                    <div class="form-holder" style="margin-top: 10px;">
-                        <div class="input-with-icon">
-                            <i class="fas fa-lock"></i>
-                            <input name="passwordConfirm" type="password" class="form-control"
-                                placeholder="Repite la Contraseña" [(ngModel)]="confirmPassword">
-                        </div>
-                    </div>
-                    <div class="form-holder" style="margin-top: 10px;">
-                        <div class="input-with-icon">
-                            <i class="fas fa-envelope"></i>
-                            <input name="email" type="text" class="form-control" placeholder="Email"
-                                [(ngModel)]="email">
-                        </div>
-                    </div>
-                    <div class="form-holder" style="margin-top: 10px;">
-                        <div class="input-with-icon">
-                            <i class="fas fa-mobile-alt"></i>
-                            <input name="phone" type="text" class="form-control" placeholder="Número de telefono"
-                                [(ngModel)]="phone">
-                        </div>
-                    </div>
-                    <div class="form-holder" style="margin-top: 10px;">
-                        <div class="input-with-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <input name="address" type="text" class="form-control" placeholder="Dirección"
-                                [(ngModel)]="address">
-                        </div>
-                    </div>
-                    <div class="form-holder" style="margin-top: 10px;">
-                        <div class="input-with-icon">
-                            <i class="fas fa-address-card"></i>
-                            <input name="postalCode" type="number" class="form-control" placeholder="Código postal"
-                                [(ngModel)]="postalCode">
-                        </div>
-                    </div>
-                    <div class="form-holder" style="margin-top: 10px;">
-                        <div class="input-with-icon">
-                            <i class="fas fa-globe"></i>
-                            <input name="country" type="text" class="form-control" placeholder="Pais"
-                                [(ngModel)]="country">
-                        </div>
-                    </div>
-                    <div class="form-holder" style="margin-top: 10px;">
-                        <div class="input-with-icon">
-                            <i class="fas fa-globe"></i>
-                            <input name="provincia" type="text" class="form-control" placeholder="Provincia"
-                                [(ngModel)]="provincia">
-                        </div>
-                    </div>
-                    <div class="form-row" style="margin-top: 10px;">
-                        <div class="form-holder">
-                            <div class="input-with-icon">
-                                <i class="fas fa-globe"></i>
-                                <input name="city" type="text" class="form-control" placeholder="Ciudad"
-                                    [(ngModel)]="city">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-holder" style="margin-top: 10px;">
-                        <div class="input-with-icon">
-                            <i class="fas fa-language"></i>
-                            <input name="preferLanguage" type="text" class="form-control" placeholder="Idioma"
-                                [(ngModel)]="preferLanguage">
+                        <div *ngIf="registerForm.get('apellidos')?.invalid && registerForm.get('apellidos')?.touched">
+                            <small *ngIf="registerForm.get('apellidos')?.errors?.['required']" class="text-danger">
+                                Los apellidos son requeridos.
+                            </small>
                         </div>
                     </div>
                     <div class="form-row" style="margin-top: 10px;">
                         <div class="input-with-icon">
                             <i class="fas fa-calendar-alt"></i>
                             <input id="dateOfBirth" name="dateOfBirth" type="text" class="form-control"
-                                placeholder="Fecha de nacimiento" [(ngModel)]="birthDate" bsDatepicker
+                                placeholder="Fecha de nacimiento" formControlName="fechaNacimiento" bsDatepicker
                                 [bsConfig]="bsConfig">
+                        </div>
+                        <div
+                            *ngIf="registerForm.get('fechaNacimiento')?.invalid && registerForm.get('fechaNacimiento')?.touched">
+                            <small *ngIf="registerForm.get('fechaNacimiento')?.errors?.['required']"
+                                class="text-danger">
+                                La fecha de nacimiento es requerida.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-holder" style="margin-top: 10px;">
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input name="dni" type="text" class="form-control" placeholder="DNI" formControlName="dni">
+                        </div>
+                        <div *ngIf="registerForm.get('dni')?.invalid && registerForm.get('dni')?.touched">
+                            <small *ngIf="registerForm.get('dni')?.errors?.['required']" class="text-danger">
+                                El DNI es requerido.
+                            </small>
+                            <small *ngIf="registerForm.get('dni')?.errors?.['dniInvalido']" class="text-danger">
+                                El DNI debe tener 8 números y una letra mayuscula.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-holder" style="margin-top: 10px;">
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input name="userName" type="text" class="form-control" placeholder="Nombre de usuario"
+                                formControlName="userName">
+                        </div>
+                        <div *ngIf="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched">
+
+                            <small *ngIf="registerForm.get('userName')?.errors?.['required']" class="text-danger">
+                                El nombre de usuario es requerido.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-holder" style="margin-top: 10px;">
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input name="password" type="password" class="form-control" placeholder="Contraseña"
+                                formControlName="password">
+                        </div>
+                        <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+                            <small *ngIf="registerForm.get('password')?.errors?.['required']" class="text-danger">
+                                La contraseña es requerida.
+                            </small>
+                            <small *ngIf="registerForm.get('password')?.hasError('minlength') && registerForm.get('password')?.touched" class="text-danger">
+                                La contraseña debe tener mínimo 6 caracteres.
+                            </small>
+                        </div>
+                        <div class="form-holder" style="margin-top: 10px;">
+                            <div class="input-with-icon">
+                                <i class="fas fa-lock"></i>
+                                <input name="passwordConfirm" type="password" class="form-control"
+                                    placeholder="Repite la Contraseña" formControlName="confirmPassword">
+                            </div>
+                            <div
+                                *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+                                <small *ngIf="registerForm.get('confirmPassword')?.errors?.['required']"
+                                    class="text-danger">
+                                    La confirmación de la contraseña es requerida.
+                                </small>
+                            </div>
+                            <div
+                                *ngIf="registerForm.errors?.['mismatch'] && registerForm.get('confirmPassword')?.touched">
+                                <small class="text-danger">
+                                    Las contraseñas no coinciden.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-holder" style="margin-top: 10px;">
+                            <div class="input-with-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input name="email" type="text" class="form-control" placeholder="Email"
+                                    formControlName="email">
+                            </div>
+                            <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+                                <small *ngIf="registerForm.get('email')?.errors?.['required']" class="text-danger">
+                                    El correo electrónico es requerido.
+                                </small>
+                                <small *ngIf="registerForm.get('email')?.errors?.['email']" class="text-danger">
+                                    El correo electrónico es inválido.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-holder" style="margin-top: 10px;">
+                            <div class="input-with-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                                <input name="phone" type="number" class="form-control" placeholder="Número de telefono"
+                                    formControlName="telefono">
+                            </div>
+                            <div *ngIf="registerForm.get('telefono')?.invalid && registerForm.get('telefono')?.touched">
+                                <small *ngIf="registerForm.get('telefono')?.errors?.['required']" class="text-danger">
+                                    El número de teléfono es requerido.
+                                </small>
+                                <small *ngIf="registerForm.get('telefono')?.errors?.['pattern']" class="text-danger">
+                                    El número de teléfono debe tener 9 numeros.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-holder" style="margin-top: 10px;">
+                            <div class="input-with-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input name="address" type="text" class="form-control" placeholder="Dirección"
+                                    formControlName="direccion">
+                            </div>
+                            <div *ngIf="registerForm.get('direccion')?.invalid && registerForm.get('direccion')?.touched">
+                                <small *ngIf="registerForm.get('direccion')?.errors?.['required']" class="text-danger">
+                                    La dirección es requerida.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-holder" style="margin-top: 10px;">
+                            <div class="input-with-icon">
+                                <i class="fas fa-address-card"></i>
+                                <input name="postalCode" type="number" class="form-control" placeholder="Código postal"
+                                    formControlName="codigoPostal">
+                            </div>
+                            <div *ngIf="registerForm.get('codigoPostal')?.invalid && registerForm.get('codigoPostal')?.touched">
+                                <small *ngIf="registerForm.get('codigoPostal')?.errors?.['required']" class="text-danger">
+                                    El código postal es requerido.
+                                </small>
+                                <small *ngIf="registerForm.get('codigoPostal')?.errors?.['pattern']" class="text-danger">
+                                    El código debe tener 5 numeros.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-holder" style="margin-top: 10px;">
+                            <div class="input-with-icon">
+                                <i class="fas fa-globe"></i>
+                                <input name="country" type="text" class="form-control" placeholder="Pais"
+                                    formControlName="pais">
+                            </div>
+                            <div *ngIf="registerForm.get('pais')?.invalid && registerForm.get('pais')?.touched">
+                                <small *ngIf="registerForm.get('pais')?.errors?.['required']" class="text-danger">
+                                    El pais es requerido.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-holder" style="margin-top: 10px;">
+                            <div class="input-with-icon">
+                                <i class="fas fa-globe"></i>
+                                <input name="provincia" type="text" class="form-control" placeholder="Provincia"
+                                    formControlName="provincia">
+                            </div>
+                            <div *ngIf="registerForm.get('provincia')?.invalid && registerForm.get('provincia')?.touched">
+                                <small *ngIf="registerForm.get('provincia')?.errors?.['required']" class="text-danger">
+                                    La provincia es requerida.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-row" style="margin-top: 10px;">
+                            <div class="form-holder">
+                                <div class="input-with-icon">
+                                    <i class="fas fa-globe"></i>
+                                    <input name="city" type="text" class="form-control" placeholder="Ciudad"
+                                        formControlName="ciudad">
+                                </div>
+                                <div *ngIf="registerForm.get('ciudad')?.invalid && registerForm.get('ciudad')?.touched">
+                                    <small *ngIf="registerForm.get('ciudad')?.errors?.['required']" class="text-danger">
+                                        La ciudad es requerida.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-holder" style="margin-top: 10px;">
+                            <div class="input-with-icon">
+                                <i class="fas fa-language"></i>
+                                <input name="preferLanguage" type="text" class="form-control" placeholder="Idioma"
+                                    formControlName="preferLanguage">
+                            </div>
+                            <div *ngIf="registerForm.get('preferLanguage')?.invalid && registerForm.get('preferLanguage')?.touched">
+                                <small *ngIf="registerForm.get('preferLanguage')?.errors?.['required']" class="text-danger">
+                                    El lenguaje preferido es requerido.
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>

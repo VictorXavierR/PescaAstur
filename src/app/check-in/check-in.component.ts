@@ -1,41 +1,46 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 @Component({
   selector: 'app-check-in',
   templateUrl: './check-in.component.html',
   styleUrl: './check-in.component.css'
 })
-export class CheckInComponent implements OnInit{
+export class CheckInComponent implements OnInit {
 
-  name: string = '';
-  email: string = '';
-  phone: string = '';
-  address: string = '';
   profilePicture: File | null = null;
-  userName: string = '';
-  birthDate: Date | null = null;
-  lastName: string = '';
-  city: string = '';
-  country: string = '';
-  postalCode: string = '';
-  password: string = '';
-  confirmPassword: string = '';
   registerDate: string = '';
   accountState: string = '';
-  preferLanguage: string = '';
   bsConfig: Partial<BsDatepickerConfig>;
-  dni: string = '';
-  provincia: string = '';
   defaultImageUrl: string = 'assets/images/avatar.png';
+  registerForm!: FormGroup;
 
-  constructor() {
+  constructor(private fb: FormBuilder, private router : Router) {
     this.bsConfig = {
       dateInputFormat: 'DD/MM/YYYY', // Formato de fecha personalizado
-      containerClass: 'theme-dark-blue' // Clase de contenedor opcional para estilos personalizados
+      containerClass: 'theme-dark' // Clase de contenedor opcional para estilos personalizados
     };
     if (!this.profilePicture) {
       this.profilePicture = new File([''], 'avatar.png', { type: 'image/png' });
     }
+    this.registerForm = this.fb.group({
+      nombre: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      telefono: ['', [Validators.required, , Validators.pattern(/^\d{9}$/)]],
+      direccion: ['', Validators.required],
+      userName: ['', Validators.required],
+      fechaNacimiento: ['', Validators.required],
+      apellidos: ['', Validators.required],
+      ciudad: ['', Validators.required],
+      pais: ['', Validators.required],
+      codigoPostal: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
+      preferLanguage: ['', Validators.required],
+      dni: ['', [Validators.required, this.validarDNI()]],
+      provincia: ['', Validators.required],
+    }, { validator: this.passwordMatchValidator });
   }
   ngOnInit(): void {
     this.loadDefaultImage();
@@ -87,21 +92,21 @@ export class CheckInComponent implements OnInit{
     this.registerDate = new Date().toISOString().split('T')[0]; // Formato yyyy-MM-dd
     this.accountState = 'active';
 
-    
+
     // Validar los datos del formulario
-    if (!this.name || !this.email || !this.phone || !this.address || !this.userName || !this.birthDate || !this.lastName || !this.city || !this.country || !this.postalCode || !this.password || !this.confirmPassword || !this.preferLanguage || !this.dni) {
+    if (!this.registerForm.valid) {
       alert('Por favor, complete todos los campos');
       return;
     }
 
     // Validar la contraseña
-    if (this.password !== this.confirmPassword) {
+    if (this.registerForm.get('password')?.value !== this.registerForm.get('confirmPassword')?.value) {
       alert('Las contraseñas no coinciden');
       return;
     }
 
     // Validar la fecha de nacimiento
-    if (this.birthDate > new Date()) {
+    if (this.registerForm.get('fechaNacimiento')?.value > new Date()) {
       alert('La fecha de nacimiento no puede ser mayor a la fecha actual');
       return;
     }
@@ -110,22 +115,22 @@ export class CheckInComponent implements OnInit{
     if (this.profilePicture) {
       formData.append('file', this.profilePicture);
     }
-    formData.append('nombre', this.name);
-    formData.append('email', this.email);
-    formData.append('telefono', this.phone);
-    formData.append('direccion', this.address);
-    formData.append('userName', this.userName);
-    formData.append('fechaNacimiento', this.birthDate.toISOString());
-    formData.append('apellido', this.lastName);
-    formData.append('ciudad', this.city);
-    formData.append('pais', this.country);
-    formData.append('codigoPostal', this.postalCode);
-    formData.append('password', this.password);
+    formData.append('nombre', this.registerForm.get('nombre')?.value);
+    formData.append('email', this.registerForm.get('email')?.value);
+    formData.append('telefono', this.registerForm.get('telefono')?.value);
+    formData.append('direccion', this.registerForm.get('direccion')?.value);
+    formData.append('userName', this.registerForm.get('userName')?.value);
+    formData.append('fechaNacimiento', this.registerForm.get('fechaNacimiento')?.value.toISOString());
+    formData.append('apellido', this.registerForm.get('apellidos')?.value);
+    formData.append('ciudad', this.registerForm.get('ciudad')?.value);
+    formData.append('pais', this.registerForm.get('pais')?.value);
+    formData.append('codigoPostal', this.registerForm.get('codigoPostal')?.value);
+    formData.append('password', this.registerForm.get('password')?.value);
     formData.append('fechaRegistro', this.registerDate);
     formData.append('estadoCuenta', this.accountState);
-    formData.append('idiomaPreferido', this.preferLanguage);
-    formData.append('DNI', this.dni);
-    formData.append('provincia', this.provincia);
+    formData.append('idiomaPreferido', this.registerForm.get('preferLanguage')?.value);
+    formData.append('DNI', this.registerForm.get('dni')?.value);
+    formData.append('provincia', this.registerForm.get('provincia')?.value);
 
     // Enviar los datos del formulario al servidor
     fetch('http://localhost:8080/api/users/register', {
@@ -135,6 +140,7 @@ export class CheckInComponent implements OnInit{
       .then(response => response.json())
       .then(data => {
         console.log(data);
+        this.router.navigate(['/login']);
       })
       .catch(error => {
         console.error(error);
@@ -158,4 +164,28 @@ export class CheckInComponent implements OnInit{
     }
   }
 
+  /**
+  * Valida el DNI del usuario.
+  * @returns Devuelve true sino es válido, y null si es válido.
+  */
+  validarDNI(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const dniRegex = /^[0-9]{8}[A-Z]$/;
+      const isValid = dniRegex.test(control.value);
+      return isValid ? null : { dniInvalido: true };
+    };
+  }
+  /**
+   * Comprueba si las contraseñas coinciden.
+   * @param form 
+   * @returns true si las contrseñas no cuinciden, y null si coinciden. 
+   */
+  passwordMatchValidator(formGroup: AbstractControl): { [key: string]: boolean } | null {
+    const password = formGroup.get('password')?.value;
+    const confirmPassword = formGroup.get('confirmPassword')?.value;
+    if (password !== confirmPassword) {
+      return { mismatch: true };  // Devolver un error si las contraseñas no coinciden
+    }
+    return null;  // Devolver null si coinciden (sin error)
+  }
 }
