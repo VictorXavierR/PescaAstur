@@ -1,3 +1,9 @@
+.card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative; /* Importante para posicionar la banda roja */
+  }
 .card-img-top {
     width: 100px;
     height: 100px;
@@ -87,4 +93,22 @@ h4.mb-3 {
     width: 30px;
     text-align: center;
   }
+
+  input[type="number"] {
+    width: 35%; /* Ajustar el tamaño del input */
+    height: 0%; /* Ajustar el tamaño del input */
+    padding: 10px;
+    font-size: 16px;
+    color: #333; /* Color del texto */
+    background-color: #f9f9f9; /* Fondo */
+    border: 1px solid #ccc; /* Borde */
+    border-radius: 5px; /* Borde redondeado */
+    outline: none; /* Eliminar borde azul al enfocar */
+    box-shadow: none; /* Eliminar sombras predeterminadas */
+    -moz-appearance: textfield; /* Eliminar el estilo predeterminado de Firefox */
+}
+
+.no-underline {
+    text-decoration: none; /* Elimina el subrayado */
+}
   

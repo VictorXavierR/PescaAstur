@@ -5,30 +5,32 @@ import { FirestorageService } from '../service/firestorage.service';
 import { Router } from '@angular/router';
 import { CartService } from '../service/cart.service';
 
-
 @Component({
   selector: 'app-productlist',
   templateUrl: './productlist.component.html',
   styleUrl: './productlist.component.css'
 })
 export class ProductlistComponent implements OnInit {
+
   products: Product[] = [];
   filteredProducts: Product[] = [];
-  filters = {
-    price: null,
-    stock: null,
-    botasVadeo: false,
-    anzuelos: false,
-    cajas: false,
-    carretes: false,
-    vadeadores: false,
-    sacaderas: false,
-    hilos: false,
-    canias: false,
-    flotadores: false,
-    botasAltas: false,
-    chalecos: false
-  };
+  precio: number = 0;
+  stock: number = 0;
+  selectedProductType: string = '';
+
+  productTypes = [
+    { label: 'Botas de vadeo', value: 'botas de vadeo' },
+    { label: 'Anzuelos', value: 'anzuelos' },
+    { label: 'Cajas', value: 'cajas' },
+    { label: 'Carretes', value: 'carretes' },
+    { label: 'Vadeadores', value: 'vadeadores' },
+    { label: 'Sacaderas', value: 'sacaderas' },
+    { label: 'Hilos de pesca', value: 'hilos de pesca' },
+    { label: 'Cañas de pescar', value: 'cañas de pescar' },
+    { label: 'Flotadores', value: 'flotadores' },
+    { label: 'Botas altas', value: 'botas altas' },
+    { label: 'Chalecos', value: 'chalecos' }
+  ];
 
   constructor(private productService: ProductService, private firestorage: FirestorageService, private router: Router, private cartService: CartService) { }
 
@@ -70,24 +72,31 @@ export class ProductlistComponent implements OnInit {
   }
 
   applyFilters(): void {
+    console.log("Filtro seleccionado:", this.selectedProductType);
+    console.log("Categorías de productos:", this.products.map(product => product.categoria));
+
     this.filteredProducts = this.products.filter(product => {
-      return (
-        (this.filters.price === null || product.precio <= this.filters.price) &&
-        (this.filters.stock === null || product.cantidadStock >= this.filters.stock) &&
-        (!this.filters.botasVadeo || product.categoria.includes('botas de vadeo')) &&
-        (!this.filters.anzuelos || product.categoria.includes('anzuelos')) &&
-        (!this.filters.cajas || product.categoria.includes('cajas')) &&
-        (!this.filters.carretes || product.categoria.includes('carretes')) &&
-        (!this.filters.vadeadores || product.categoria.includes('vadeadores')) &&
-        (!this.filters.sacaderas || product.categoria.includes('sacaderas')) &&
-        (!this.filters.hilos || product.categoria.includes('hilos de pesca')) &&
-        (!this.filters.canias || product.categoria.includes('cañas de pescar')) &&
-        (!this.filters.flotadores || product.categoria.includes('flotadores')) &&
-        (!this.filters.botasAltas || product.categoria.includes('botas altas')) &&
-        (!this.filters.chalecos || product.categoria.includes('chalecos'))
-      );
+      // Validar precio solo si es mayor a 0
+      const matchesPrice = (this.precio === null || this.precio === 0 || product.precio <= this.precio);
+      const matchesStock = (this.stock === null || this.stock === 0 || product.cantidadStock >= this.stock);
+
+      // Verifica si la categoría seleccionada coincide con la categoría del producto
+      const matchesProductType = (this.selectedProductType === '' ||
+        product.categoria === this.selectedProductType);
+
+      console.log({
+        productCategory: product.categoria,
+        priceMatch: matchesPrice,
+        stockMatch: matchesStock,
+        productTypeMatch: matchesProductType
+      }); // Para verificar las coincidencias en cada producto
+
+      return matchesPrice && matchesStock && matchesProductType;
     });
+
+    console.log("Productos filtrados:", this.filteredProducts);
   }
+
 
   setProduct(product: Product): void {
     this.productService.setProduct(product);
@@ -96,23 +105,26 @@ export class ProductlistComponent implements OnInit {
 
   addToCart(product: Product, event: Event): void {
     event.stopPropagation();
-    if(product.cantidad > 0){
+    if (product.cantidad > 0) {
       this.cartService.addProductToCart(product);
-    } 
+    }
   }
 
   incrementQuantity(event: Event, product: Product) {
     event.stopPropagation();
-    if(product.cantidadStock > product.cantidad){
-        product.cantidad++;
+    if (product.cantidadStock > product.cantidad) {
+      product.cantidad++;
     }
-    
+
   }
   decrementQuantity(event: Event, product: Product) {
     event.stopPropagation();
-    if (product.cantidad > 1){
+    if (product.cantidad > 1) {
       product.cantidad--;
-    } 
-    
+    }
+  } 
+  
+  ordenarAlfabeticmente() {
+    this.filteredProducts.sort((a, b) => a.nombre.localeCompare(b.nombre));
   }
 }
