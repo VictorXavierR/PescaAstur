@@ -25,6 +25,7 @@ public class EmailService {
      * @param body Cuerpo del correo.
      */
     public void sendEmail(String to, String subject, String body) {
+        System.out.println("Sending email to: " + to);
         ClientOptions options = ClientOptions.builder()
                 .apiKey(mailjetApiKey)
                 .apiSecretKey(mailjetApiSecret)
