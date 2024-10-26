@@ -56,7 +56,7 @@ export class MapComponent implements OnInit {
             position: 'right',
             title: {
               display: true,
-              text: 'Wave Height Max (m)'
+              text: 'Wave Height Max (m)',
             },
             grid: {
               drawOnChartArea: false // only want the grid lines for one axis
@@ -152,6 +152,9 @@ export class MapComponent implements OnInit {
       detectRetina: true,
       crossOrigin: true
     }).addTo(this.map);
+
+    // Marcador por defecto y generación de las gráficas
+    this.createDefaultMarker(43.3619, -5.8494);
 
     this.map.on('click', (e: any) => {
       this.handleMapClick(e.latlng.lat, e.latlng.lng);
@@ -342,5 +345,23 @@ export class MapComponent implements OnInit {
     // Crear un nuevo marcador en las coordenadas donde se hizo clic
     this.waypointMarker = L.marker([lat, lng], { icon: waypointIcon }).addTo(this.map);
   }
+
+  // Método para crear un marcador por defecto y generar gráficas
+private createDefaultMarker(lat: number, lng: number): void {
+  const waypointIcon = L.divIcon({
+    className: 'waypoint-icon', // Clase CSS personalizada para el icono
+    html: '<i class="fas fa-map-marker fa-2x"></i>', // HTML del icono de Font Awesome
+    iconSize: [32, 32], // Tamaño del icono [ancho, alto]
+    iconAnchor: [16, 32], // Punto de anclaje del icono [posición horizontal, posición vertical]
+    popupAnchor: [0, -32] // Punto de anclaje del popup del icono [posición horizontal, posición vertical]
+  });
+
+  // Crear el marcador en las coordenadas por defecto
+  this.waypointMarker = L.marker([lat, lng], { icon: waypointIcon }).addTo(this.map);
+
+  // Generar las gráficas para el marcador por defecto
+  this.getWeather(lat, lng);
+  this.getMarineWeather(lat, lng);
+}
 
 }

@@ -2,7 +2,8 @@
     border: 1px solid #ddd;
     border-radius: 5px;
     overflow: hidden;
-    position: relative; /* Importante para posicionar la banda roja */
+    position: relative;
+    background-color: #ccccccb7;
   }
 .card-img-top {
     width: 100px;
