@@ -51,7 +51,11 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Error adding comment"));
         }
     }
-
+    /**
+     *Añade una valoración a un producto en Firestore.
+     * @param  product Producto al que se le añadirá la valoración.
+     * @return Mensaje de confirmación.
+     */
     @PatchMapping("/addRatingToRatings")
     public ResponseEntity<Map<String,String>> addRatingToArrayField(@RequestBody Product product) {
         try {
@@ -60,6 +64,27 @@ public class ProductController {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Error adding rating"));
+        }
+    }
+    /**
+     * Actualiza el stock de los productos en Firestore.
+     * @param products Lista de productos con los nuevos valores de stock.
+     * @return Mensaje de confirmación.
+     */
+    @PostMapping("/update-stocks")
+    public ResponseEntity<String> updateProductStocks(@RequestBody List<Product> products) {
+        try {
+            String resultMessage = firestoreService.updateProductStocks(products);
+            // Retorna el mensaje con el estado HTTP adecuado
+            if (resultMessage.contains("Error")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resultMessage);
+            } else {
+                return ResponseEntity.ok(resultMessage);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al procesar el pedido: " + e.getMessage());
         }
     }
 }

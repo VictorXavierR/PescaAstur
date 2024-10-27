@@ -25,4 +25,5 @@ public class Product {
     private List<Integer> rating;
     private List<String>comentarios;
     private String UID;
+    private int cantidad;
 }

@@ -221,5 +221,48 @@ public class FirestoreService {
                 .update("rating", FieldValue.arrayUnion(rating)).get();
         return writeResult.getUpdateTime().toString();
     }
+    /**
+     * Actualiza el stock de productos en Firestore.
+     * @param products Lista de productos con la cantidad de stock a actualizar.
+     * @return Mensaje de confirmación.
+     */
+    public String updateProductStocks(List<Product> products) {
+        try {
+            for (Product product : products) {
+                DocumentReference docRef = db.collection("products").document(product.getUID());
+                DocumentSnapshot document = docRef.get().get();
+
+                if (document.exists()) {
+                    // Asegúrate de que el campo cantidadStock sea un número
+                    Long cantidadStockObj = document.getLong("cantidadStock");
+                    if (cantidadStockObj == null) {
+                        return "Error: El stock para el producto con ID " + product.getUID() + " no está disponible.";
+                    }
+
+                    int currentStock = cantidadStockObj.intValue();
+                    int requestedQuantity = product.getCantidad();
+
+                    // Verifica que haya suficiente stock
+                    if (currentStock >= requestedQuantity) {
+                        // Resta el stock
+                        int newStock = currentStock - requestedQuantity;
+
+                        // Actualiza el stock en Firestore
+                        WriteResult writeResult = docRef.update("cantidadStock", newStock).get();
+                    } else {
+                        // Si no hay suficiente stock, retorna un mensaje de error
+                        return "Error: Stock insuficiente para el producto con ID " + product.getUID();
+                    }
+                } else {
+                    return "Error: Producto con ID " + product.getUID() + " no encontrado en la base de datos";
+                }
+            }
+            // Si todos los productos se actualizan correctamente, devuelve éxito
+            return "Pedido procesado y stock actualizado correctamente para todos los productos";
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return "Error al procesar el pedido: " + e.getMessage();
+        }
+    }
 
 }
