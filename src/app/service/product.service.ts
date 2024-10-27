@@ -49,5 +49,19 @@ export class ProductService {
       })
     });
   }
+  /**
+   * Actualiza el stock de los productos en la base de datos
+   * @param products 
+   * @returns la respuesta del controlador
+   */
+  updateStocks(products: Product[]): Observable<string> {
+    const url = 'http://localhost:8080/api/products/update-stocks';
+    return this.http.post<any>(url, products,{
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      responseType: 'text' as 'json'
+    });
+  }
 
 }

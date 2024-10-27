@@ -3,6 +3,8 @@ import { CartService } from '../service/cart.service';
 import { User } from '../model/user';
 import { UserService } from '../service/user.service';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Product } from '../model/product';
+import { ProductService } from '../service/product.service';
 
 @Component({
   selector: 'app-check-out',
@@ -22,10 +24,11 @@ export class CheckOutComponent {
   fechaExpiracion: string = '';
   codigoSeguridad: string = '';
   pedidoDetalles: string = '';
+  listaProductos: Product[] = [];
 
 
 
-  constructor(private cartService: CartService, private userService: UserService, private fb: FormBuilder) { }
+  constructor(private cartService: CartService, private userService: UserService, private fb: FormBuilder, private productService: ProductService) { }
 
   ngOnInit(): void {
     this.subTotal = this.cartService.getTotal();
@@ -33,16 +36,19 @@ export class CheckOutComponent {
     this.createForm();
     this.total();
     this.pedidoDetalles = this.cartService.genereteDetails();
+    this.cartService.getShoppingCart().subscribe(productos => {
+      this.listaProductos = productos;
+    });
   }
 
   createForm() {
     this.userForm = this.fb.group({
       nombre: [this.OldUser.nombre, Validators.required],
-      DNI: [this.OldUser.DNI, [Validators.required, this.validarDNI()]], 
+      DNI: [this.OldUser.DNI, [Validators.required, this.validarDNI()]],
       email: [this.OldUser.email, [Validators.required, Validators.email]],
-      telefono: [this.OldUser.telefono, [Validators.required, Validators.pattern(/^\d{9}$/)]], 
+      telefono: [this.OldUser.telefono, [Validators.required, Validators.pattern(/^\d{9}$/)]],
       direccion: [this.OldUser.direccion, Validators.required],
-      codigoPostal: [this.OldUser.codigoPostal, [Validators.required, Validators.pattern(/^\d{5}$/)]], 
+      codigoPostal: [this.OldUser.codigoPostal, [Validators.required, Validators.pattern(/^\d{5}$/)]],
       pais: [this.OldUser.pais, Validators.required],
       provincia: [this.OldUser.provincia, Validators.required],
       numeroTarjeta: ['', [Validators.required, Validators.pattern(/^\d{4} \d{4} \d{4} \d{4}$/)]],
@@ -56,11 +62,16 @@ export class CheckOutComponent {
    * @returns Devuelve el precio final del pedido, que incluye el precio total y los gastos de envío.
    */
   total() {
-    return this.precioFinal = this.subTotal + 5.21;
+    this.precioFinal = this.subTotal + 5.21;
+    const formateador = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    return formateador.format(this.precioFinal);
   }
   /**
    * Tramita el pedido y envía un correo electrónico al usuario con los detalles del pedido
-   * y los datos bancarios para la transferencia.
+   * y los datos bancarios para la transferencia. Ademas limpia el carrito de la compra y actualiza los stocks de los productos.
    */
   tramitarPedido() {
     if (this.userForm.invalid) {
@@ -69,6 +80,7 @@ export class CheckOutComponent {
       return;
     }
     this.OldUser = { ...this.OldUser, ...this.userForm.value };
+    this.titularTarjeta=this.userForm.get('titularTarjeta')?.value;
     const datosBancariosOcultos = this.ocultarDatos(this.titularTarjeta, this.numeroTarjeta);
     const emailBody = `
       <h1>Confirmación de Pedido: PescaAstur</h1>
@@ -95,11 +107,22 @@ export class CheckOutComponent {
       .then(data => {
         console.log('Correo enviado:', data);
         alert('Pedido tramitado correctamente. Se ha enviado un correo con los detalles.');
+        console.log(this.listaProductos);
+        // Actualizar stocks después de que el correo haya sido enviado
+        this.productService.updateStocks(this.listaProductos).subscribe({
+          next: (data) => {
+            console.log('Stock actualizado:', data);
+          },
+          error: (error) => {
+            console.error('Error al actualizar el stock:', error);
+          }
+        });
         this.cartService.clearCart();
       })
       .catch((error) => {
         console.error('Error:', error);
       });
+
   }
   /**
    * Oculta los datos sensibles de la tarjeta de crédito.
@@ -109,11 +132,9 @@ export class CheckOutComponent {
    */
   ocultarDatos(titular: string, numero: string): string {
     const numeroOculto = numero.replace(/.(?=.{4})/g, 'x');
-
-    return `
-  Titular: ${titular}, 
-  Número de Tarjeta: ${numeroOculto}
-  `;
+    console.log('Datos bancarios ocultos:' + titular + ' ' + numeroOculto);
+    return `Titular: ${titular}, 
+    Número de Tarjeta: ${numeroOculto}`;
   }
   /**
    * Formatea el número de la tarjeta de crédito para que se muestre con espacios cada 4 dígitos.
@@ -134,36 +155,36 @@ export class CheckOutComponent {
    */
   validarFechaExpiracion(control: AbstractControl): ValidationErrors | null {
     const fechaExpiracion = control.value;
-  
+
     // Si el campo está vacío, no realizamos la validación aquí (el campo requerido lo valida)
     if (!fechaExpiracion) {
       return null;
     }
-  
+
     // Dividimos la fecha en mes y año
     const [mes, anio] = fechaExpiracion.split('/').map(Number);
-  
+
     // Verifica si el mes y el año son válidos
     if (isNaN(mes) || isNaN(anio) || mes < 1 || mes > 12) {
       return { fechaInvalida: true }; // Mes fuera de rango
     }
-  
+
     // Si el año es de dos dígitos, lo convertimos a cuatro dígitos
     const anioCompleto = anio < 100 ? 2000 + anio : anio;
-  
+
     // Obtenemos la fecha actual
     const fechaActual = new Date();
     const mesActual = fechaActual.getMonth() + 1; // Los meses en JavaScript son base 0
     const anioActual = fechaActual.getFullYear();
-  
+
     // Comparamos el año primero, y luego el mes
     if (anioCompleto < anioActual || (anioCompleto === anioActual && mes < mesActual)) {
       return { fechaInvalida: true }; // Devuelve un error si la fecha es anterior a la actual
     }
-  
+
     return null; // Si la fecha es válida
   }
-  
+
   /**
    * Valida el DNI del usuario.
    * @returns Devuelve true sino es válido, y null si es válido.
