@@ -84,20 +84,4 @@ public class FirebaseUserService {
         }
     }
 
-    /**
-     * Autentica un usuario en Firebase Authentication.
-     * @param idToken Token de ID del usuario.
-     * @return Mensaje de confirmación.
-     */
-    @PostMapping("/authenticate")
-    public String authenticateUser(@RequestBody String idToken) {
-        try {
-            // Verificar el token de ID con Firebase Authentication
-            FirebaseAuth.getInstance().verifyIdToken(idToken);
-            return "Autenticación exitosa";
-        } catch (FirebaseAuthException e) {
-            e.printStackTrace();
-            return "Error de autenticación";
-        }
-    }
 }

@@ -18,15 +18,17 @@ public class FireStorageService {
                 .build()
                 .getService();
     }
-    public void deleteFile(String fileName) {
+    // Constructor para pruebas
+    public FireStorageService(Storage storage) {
+        this.storage = storage;
+    }
+    public boolean deleteFile(String fileName) {
         String bucketName = "pescaastur-160f4.appspot.com";
         BlobId blobId = BlobId.of(bucketName, fileName);
-        boolean deleted = storage.delete(blobId);
-        if (deleted) {
-            System.out.println("File deleted successfully");
-        } else {
-            System.out.println("File not found");
-        }
+        System.out.println("Attempting to delete: " + fileName);
+        boolean deleted= storage.delete(blobId);
+        System.out.println("Delete result: " + deleted);
+        return deleted;
     }
 
     /**
@@ -66,7 +68,7 @@ public class FireStorageService {
      * @return Archivo temporal.
      * @throws IOException Si ocurre un error al procesar el archivo.
      */
-    private File convertToFile(MultipartFile file) throws IOException {
+    public File convertToFile(MultipartFile file) throws IOException {
         File convFile = new File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
         try (FileOutputStream fos = new FileOutputStream(convFile)) {
             fos.write(file.getBytes());

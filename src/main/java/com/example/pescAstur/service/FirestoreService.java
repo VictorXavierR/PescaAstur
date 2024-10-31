@@ -6,6 +6,7 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.cloud.StorageClient;
@@ -29,6 +30,13 @@ public class FirestoreService {
     public FirestoreService() throws IOException {
         this.fireStorageService = new FireStorageService();
         this.db = FirestoreClient.getFirestore(FirebaseApp.getInstance());
+    }
+
+    // Constructor para pruebas
+    @VisibleForTesting
+    public FirestoreService(Firestore db, FireStorageService fireStorageService) {
+        this.db = db;
+        this.fireStorageService = fireStorageService;
     }
 
     /**
