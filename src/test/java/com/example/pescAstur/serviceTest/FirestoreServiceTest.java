@@ -1,4 +1,5 @@
 package com.example.pescAstur.serviceTest;
+import com.example.pescAstur.model.Product;
 import com.example.pescAstur.model.User;
 import com.example.pescAstur.service.FireStorageService;
 import com.example.pescAstur.service.FirestoreService;
@@ -14,7 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,12 +45,20 @@ public class FirestoreServiceTest {
 
     private final String userId = "testUserId";
     private User user;
+    private ApiFuture<DocumentSnapshot> mockFuture;
+    private DocumentSnapshot mockDocument;
 
 
     @BeforeEach
     void setUp() {
+        db = mock(Firestore.class);
+        documentReference = mock(DocumentReference.class);
+        mockFuture = mock(ApiFuture.class);
+        mockDocument = mock(DocumentSnapshot.class);
         CollectionReference usersCollection = mock(CollectionReference.class);
+        CollectionReference productsCollection = mock(CollectionReference.class);
         lenient().when(db.collection("users")).thenReturn(usersCollection);
+        lenient().when(db.collection("products")).thenReturn(productsCollection);
         lenient().when(usersCollection.document(anyString())).thenReturn(documentReference);
         firestoreService = new FirestoreService(db, fireStorageService);
         user = new User();
@@ -248,7 +259,7 @@ public class FirestoreServiceTest {
         // Verificaciones individuales
         assertEquals(user.getNombre(), capturedUpdates.get("nombre"), "El nombre no coincide");
         assertEquals(user.getApellido(), capturedUpdates.get("apellido"), "El apellido no coincide");
-        // ... (resto de las verificaciones)
+
 
         // Verifica que fotoPerfil no está en las actualizaciones
         assertFalse(capturedUpdates.containsKey("fotoPerfil"), "fotoPerfil no debería estar presente");
@@ -472,6 +483,312 @@ public class FirestoreServiceTest {
         // Assert
         assertEquals("Error al eliminar el usuario", exception.getMessage());
         verify(mockDocRef).delete(); // Verifica que se llamó al método delete
+    }
+    /**
+     * Prueba unitaria para el método {@link FirestoreService#getProfilePhoto(String)} que verifica
+     * la obtención exitosa de la URL de la foto de perfil de un usuario.
+     * <p>
+     * En esta prueba, se simula una referencia de documento en la base de datos que
+     * contiene un campo "fotoPerfil" con una URL de ejemplo. La prueba valida que el
+     * método retorne la URL correcta cuando el documento existe y contiene dicho campo.
+     * </p>
+     * @throws Exception si ocurre una excepción durante la ejecución de la operación asíncrona
+     */
+    @Test
+    void testGetProfilePhoto_Success() throws Exception {
+        // Arrange
+        String userId = "testUserId";
+        String expectedPhotoUrl = "http://example.com/photo.jpg";
+        when(db.collection("users").document(userId)).thenReturn(mockDocRef);
+        when(mockDocRef.get()).thenReturn(mockFuture);
+        when(mockFuture.get()).thenReturn(mockDocument);
+        when(mockDocument.exists()).thenReturn(true);
+        when(mockDocument.getString("fotoPerfil")).thenReturn(expectedPhotoUrl);
+        // Act
+        String actualPhotoUrl = firestoreService.getProfilePhoto(userId);
+        // Assert
+        assertEquals(expectedPhotoUrl, actualPhotoUrl);
+    }
+
+    /**
+     * Prueba unitaria para el método {@link FirestoreService#getProfilePhoto(String)}
+     * que verifica el comportamiento cuando el documento de usuario no existe en la base de datos.
+     * <p>
+     * En esta prueba, se simula una referencia de documento inexistente en la base de datos.
+     * La prueba valida que el método retorne {@code null} cuando el documento no existe.
+     * </p>
+     * @throws Exception si ocurre una excepción durante la ejecución de la operación asíncrona
+     */
+    @Test
+    void testGetProfilePhoto_DocumentDoesNotExist() throws Exception {
+        // Arrange
+        String userId = "nonExistentUserId";
+
+        when(db.collection("users").document(userId)).thenReturn(mockDocRef);
+        when(mockDocRef.get()).thenReturn(mockFuture);
+        when(mockFuture.get()).thenReturn(mockDocument);
+        when(mockDocument.exists()).thenReturn(false);
+
+        // Act
+        String actualPhotoUrl = firestoreService.getProfilePhoto(userId);
+
+        // Assert
+        assertNull(actualPhotoUrl);
+    }
+
+    /**
+     * Prueba unitaria para el método {@link FirestoreService#getProfilePhoto(String)}
+     * que verifica el comportamiento cuando ocurre una excepción durante la obtención del documento de usuario.
+     * <p>
+     * En esta prueba, se simula una excepción de tipo {@link ExecutionException} cuando se intenta
+     * recuperar el documento del usuario. La prueba valida que el método retorne {@code null} en caso de excepción.
+     * </p>
+     * @throws Exception si ocurre una excepción inesperada durante la ejecución de la operación asíncrona
+     */
+    @Test
+    void testGetProfilePhoto_Exception() throws Exception {
+        // Arrange
+        String userId = "testUserId";
+
+        when(db.collection("users").document(userId)).thenReturn(mockDocRef);
+        when(mockDocRef.get()).thenReturn(mockFuture);
+        when(mockFuture.get()).thenThrow(new ExecutionException("Error", new Throwable()));
+
+        // Act
+        String actualPhotoUrl = firestoreService.getProfilePhoto(userId);
+
+        // Assert
+        assertNull(actualPhotoUrl);
+    }
+
+    /**
+     * Prueba unitaria para el método {@link FirestoreService#getAllProducts()} que verifica
+     * que se obtienen correctamente todos los productos de la colección "products" en Firestore.
+     * <p>
+     * En esta prueba, se simulan varios documentos de productos en la colección, y la prueba
+     * valida que el método devuelve una lista de productos que corresponde con los documentos simulados.
+     * </p>
+     * @throws ExecutionException si ocurre un error durante la ejecución de la operación asíncrona
+     * @throws InterruptedException si la operación es interrumpida
+     */
+    @Test
+    void testGetAllProducts_Success() throws ExecutionException, InterruptedException {
+        // Arrange
+        List puntuacion=new ArrayList<Integer>();
+        List comentarios= new ArrayList<String>();
+        puntuacion.add(1);
+        comentarios.add("Genial");
+        QuerySnapshot mockQuerySnapshot = mock(QuerySnapshot.class);
+        List<QueryDocumentSnapshot> mockDocuments = new ArrayList<>();
+        QueryDocumentSnapshot mockDoc1 = mock(QueryDocumentSnapshot.class);
+        QueryDocumentSnapshot mockDoc2 = mock(QueryDocumentSnapshot.class);
+        Product product1 = new Product(100,"Prueba1",10.50,"descripcion1",0.0,"grande","01/11/2024","foto1","marca1","producto1","peso1",20.80,puntuacion,comentarios,"UID1",1);
+        Product product2 = new Product(200,"Prueba2",11.50,"descripcion2",0.0,"grande","01/11/2024","foto1","marca1","producto2","peso1",20.80,puntuacion,comentarios,"UID2",1);
+
+        when(mockDoc1.toObject(Product.class)).thenReturn(product1);
+        when(mockDoc2.toObject(Product.class)).thenReturn(product2);
+        when(mockDoc1.getId()).thenReturn("UID1");
+        when(mockDoc2.getId()).thenReturn("UID2");
+        mockDocuments.add(mockDoc1);
+        mockDocuments.add(mockDoc2);
+
+        ApiFuture<QuerySnapshot> mockFuture = mock(ApiFuture.class);
+        when(db.collection("products").get()).thenReturn(mockFuture);
+        when(mockFuture.get()).thenReturn(mockQuerySnapshot);
+        when(mockQuerySnapshot.getDocuments()).thenReturn(mockDocuments);
+
+        // Act
+        List<Product> actualProducts = firestoreService.getAllProducts();
+
+        // Assert
+        assertEquals(2, actualProducts.size());
+        assertEquals("UID1", actualProducts.get(0).getUID());
+        assertEquals("UID2", actualProducts.get(1).getUID());
+        assertEquals("producto1", actualProducts.get(0).getNombre());
+        assertEquals("producto2", actualProducts.get(1).getNombre());
+    }
+
+    /**
+     * Prueba unitaria para el método {@link FirestoreService#getAllProducts()} que verifica
+     * el comportamiento cuando ocurre una excepción al obtener los productos de la colección "products" en Firestore.
+     * <p>
+     * En esta prueba, se simula una excepción de tipo {@link ExecutionException} durante la
+     * obtención de documentos, y se verifica que la excepción es correctamente lanzada.
+     * </p>
+     * @throws ExecutionException si ocurre un error durante la ejecución de la operación asíncrona
+     * @throws InterruptedException si la operación es interrumpida
+     */
+    @Test
+    void testGetAllProducts_Exception() throws ExecutionException, InterruptedException {
+        // Arrange
+        ApiFuture<QuerySnapshot> mockFuture = mock(ApiFuture.class);
+        when(db.collection("products").get()).thenReturn(mockFuture);
+        when(mockFuture.get()).thenThrow(new ExecutionException("Error", new Throwable()));
+        // Act & Assert
+        assertThrows(ExecutionException.class, () -> firestoreService.getAllProducts());
+    }
+
+    /**
+     * Prueba unitaria para el método {@code addCommentToComments} en {@code FirestoreService}.
+     * Verifica que un comentario se añada correctamente a la lista de comentarios del producto
+     * identificado por el {@code documentId}.
+     */
+    @Test
+    void testAddCommentToComments_Success() throws ExecutionException, InterruptedException {
+        // Arrange
+        String documentId = "testDocumentId";
+        String comment = "Excelente producto!";
+        String expectedUpdateTime = "2024-11-01T12:00:00Z";
+        DocumentReference mockDocRef = mock(DocumentReference.class);
+        ApiFuture<WriteResult> mockFuture = mock(ApiFuture.class);
+        WriteResult mockWriteResult = mock(WriteResult.class);
+        // Configuración de Firestore mockeado
+        when(db.collection("products").document(documentId)).thenReturn(mockDocRef);
+        when(mockDocRef.update(eq("comentarios"), eq(FieldValue.arrayUnion(comment)))).thenReturn(mockFuture);
+        when(mockFuture.get()).thenReturn(mockWriteResult);
+        when(mockWriteResult.getUpdateTime()).thenReturn(Timestamp.parseTimestamp(expectedUpdateTime));
+        // Act
+        String actualUpdateTime = firestoreService.addCommentToComments(documentId, comment);
+        // Assert
+        assertEquals(expectedUpdateTime, actualUpdateTime, "El tiempo de actualización debería coincidir con el esperado.");
+        verify(mockDocRef).update("comentarios", FieldValue.arrayUnion(comment));
+    }
+
+    /**
+     * Testea el método addRatingToRatings para asegurarse de que se agrega correctamente una
+     * calificación a los ratings del documento. Se espera que el método retorne el tiempo de actualización.
+     * @throws Exception si ocurre algún error durante la ejecución
+     */
+    @Test
+    void testAddRatingToRatings_Success() throws Exception {
+        // Arrange
+        String documentId = "testDocumentId";
+        int rating = 5;
+        String expectedUpdateTime = "2024-11-01T12:00:00Z";
+        // Mock de DocumentReference y WriteResult
+        DocumentReference mockDocRef = mock(DocumentReference.class);
+        WriteResult mockWriteResult = mock(WriteResult.class);
+        ApiFuture<WriteResult> mockFuture = mock(ApiFuture.class);
+        // Configura el mock para el comportamiento esperado
+        when(db.collection("products").document(documentId)).thenReturn(mockDocRef);
+        when(mockDocRef.update("rating", FieldValue.arrayUnion(rating))).thenReturn(mockFuture);
+        when(mockFuture.get()).thenReturn(mockWriteResult);
+        when(mockWriteResult.getUpdateTime()).thenReturn(Timestamp.parseTimestamp(expectedUpdateTime));
+        // Act
+        String actualUpdateTime = firestoreService.addRatingToRatings(documentId, rating);
+        // Assert
+        assertEquals(expectedUpdateTime, actualUpdateTime);
+    }
+    /**
+     * Testea el método updateProductStocks para asegurarse de que actualiza correctamente
+     * los stocks de los productos si hay suficiente stock disponible.
+     * @throws ExecutionException si ocurre un error durante la ejecución
+     * @throws InterruptedException si la operación es interrumpida
+     */
+    @Test
+    void testUpdateProductStocks_Success() throws ExecutionException, InterruptedException {
+        // Arrange
+        Product product1 = new Product();
+        product1.setUID("UID1");
+        product1.setCantidad(5); // Solicita 5
+        product1.setCantidadStock(10); // Stock actual de 10
+
+        Product product2 = new Product();
+        product2.setUID("UID2");
+        product2.setCantidad(10); // Solicita 10
+        product2.setCantidadStock(15); // Stock actual de 15
+
+        List<Product> products = new ArrayList<>();
+        products.add(product1);
+        products.add(product2);
+
+        DocumentReference mockDocRef1 = mock(DocumentReference.class);
+        DocumentReference mockDocRef2 = mock(DocumentReference.class);
+        DocumentSnapshot mockDocument1 = mock(DocumentSnapshot.class);
+        DocumentSnapshot mockDocument2 = mock(DocumentSnapshot.class);
+        ApiFuture<DocumentSnapshot> mockFuture1 = mock(ApiFuture.class);
+        ApiFuture<DocumentSnapshot> mockFuture2 = mock(ApiFuture.class);
+        ApiFuture<WriteResult> mockWriteFuture1 = mock(ApiFuture.class);
+        ApiFuture<WriteResult> mockWriteFuture2 = mock(ApiFuture.class);
+        WriteResult mockWriteResult = mock(WriteResult.class);
+        // Configuración de mocks
+        when(db.collection("products").document("UID1")).thenReturn(mockDocRef1);
+        when(db.collection("products").document("UID2")).thenReturn(mockDocRef2);
+        when(mockDocRef1.get()).thenReturn(mockFuture1);
+        when(mockFuture1.get()).thenReturn(mockDocument1);
+        when(mockDocument1.exists()).thenReturn(true);
+        when(mockDocument1.getLong("cantidadStock")).thenReturn(10L); // Stock actual de 10
+        when(mockDocRef2.get()).thenReturn(mockFuture2);
+        when(mockFuture2.get()).thenReturn(mockDocument2);
+        when(mockDocument2.exists()).thenReturn(true);
+        when(mockDocument2.getLong("cantidadStock")).thenReturn(15L); // Stock actual de 15
+        // Simulando que la actualización se realiza correctamente
+        when(mockDocRef1.update("cantidadStock", 5)).thenReturn(mockWriteFuture1);
+        when(mockWriteFuture1.get()).thenReturn(mockWriteResult);
+        when(mockDocRef2.update("cantidadStock", 5)).thenReturn(mockWriteFuture2);
+        when(mockWriteFuture2.get()).thenReturn(mockWriteResult);
+        // Act
+        String result = firestoreService.updateProductStocks(products);
+        // Assert
+        assertEquals("Pedido procesado y stock actualizado correctamente para todos los productos", result);
+    }
+
+    /**
+     * Testea el método updateProductStocks para asegurarse de que maneja correctamente
+     * el caso en el que un producto no se encuentra en la base de datos.
+     * @throws ExecutionException si ocurre un error durante la ejecución
+     * @throws InterruptedException si la operación es interrumpida
+     */
+    @Test
+    void testUpdateProductStocks_ProductNotFound() throws ExecutionException, InterruptedException {
+        // Arrange
+        Product product = new Product();
+        product.setUID("UID1");
+        product.setCantidad(5); // Solicita 5
+        List<Product> products = new ArrayList<>();
+        products.add(product);
+        DocumentReference mockDocRef = mock(DocumentReference.class);
+        DocumentSnapshot mockDocument = mock(DocumentSnapshot.class);
+        ApiFuture<DocumentSnapshot> mockFuture = mock(ApiFuture.class);
+        // Configuración de mocks
+        when(db.collection("products").document("UID1")).thenReturn(mockDocRef);
+        when(mockDocRef.get()).thenReturn(mockFuture);
+        when(mockFuture.get()).thenReturn(mockDocument);
+        when(mockDocument.exists()).thenReturn(false); // Producto no encontrado
+        // Act
+        String result = firestoreService.updateProductStocks(products);
+        // Assert
+        assertEquals("Error: Producto con ID UID1 no encontrado en la base de datos", result);
+    }
+
+    /**
+     * Testea el método updateProductStocks para asegurarse de que maneja correctamente
+     * el caso en el que el stock es insuficiente.
+     * @throws ExecutionException si ocurre un error durante la ejecución
+     * @throws InterruptedException si la operación es interrumpida
+     */
+    @Test
+    void testUpdateProductStocks_InsufficientStock() throws ExecutionException, InterruptedException {
+        // Arrange
+        Product product = new Product();
+        product.setUID("UID1");
+        product.setCantidad(15); // Solicita 15
+        product.setCantidadStock(10); // Stock actual de 10
+        List<Product> products = new ArrayList<>();
+        products.add(product);
+        DocumentReference mockDocRef = mock(DocumentReference.class);
+        DocumentSnapshot mockDocument = mock(DocumentSnapshot.class);
+        ApiFuture<DocumentSnapshot> mockFuture = mock(ApiFuture.class);
+        // Configuración de mocks
+        when(db.collection("products").document("UID1")).thenReturn(mockDocRef);
+        when(mockDocRef.get()).thenReturn(mockFuture);
+        when(mockFuture.get()).thenReturn(mockDocument);
+        when(mockDocument.exists()).thenReturn(true); // Producto encontrado
+        when(mockDocument.getLong("cantidadStock")).thenReturn(10L); // Stock actual de 10
+        // Act
+        String result = firestoreService.updateProductStocks(products);
+        // Assert
+        assertEquals("Error: Stock insuficiente para el producto con ID UID1", result);
     }
 
 }
