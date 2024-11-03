@@ -3,29 +3,25 @@ import com.example.pescAstur.model.Product;
 import com.example.pescAstur.model.User;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.Bucket;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.cloud.FirestoreClient;
-import com.google.firebase.cloud.StorageClient;
+import lombok.Getter;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import com.google.cloud.firestore.DocumentSnapshot;
-import java.net.URL;
-import java.nio.file.Paths;
+
 
 @Service
 @DependsOn("initializeFirebase")
 public class FirestoreService {
+    @Getter
     private final Firestore db;
     private final FireStorageService fireStorageService;
 
