@@ -222,11 +222,31 @@ public class FirestoreService {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    public String addRatingToRatings(String documentId,int rating) throws ExecutionException, InterruptedException {
-        WriteResult writeResult = db.collection("products").document(documentId)
-                .update("rating", FieldValue.arrayUnion(rating)).get();
-        return writeResult.getUpdateTime().toString();
+    public String addRatingToRatings(String documentId, int rating) throws ExecutionException, InterruptedException {
+        // Obtén el documento de la colección "products"
+        DocumentReference docRef = db.collection("products").document(documentId);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot document = future.get();
+
+        if (document.exists()) {
+            // Obtén el array de calificaciones actual
+            List<Integer> ratings = (List<Integer>) document.get("rating");
+
+            if (ratings == null) {
+                ratings = new ArrayList<>();
+            }
+
+            // Agrega la nueva calificación al array
+            ratings.add(rating);
+
+            // Actualiza el campo "rating" en el documento
+            WriteResult writeResult = docRef.update("rating", ratings).get();
+            return writeResult.getUpdateTime().toString();
+        } else {
+            throw new IllegalArgumentException("El documento con ID " + documentId + " no existe.");
+        }
     }
+
     /**
      * Actualiza el stock de productos en Firestore.
      * @param products Lista de productos con la cantidad de stock a actualizar.
