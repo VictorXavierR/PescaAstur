@@ -131,7 +131,7 @@ export class CheckOutComponent {
    * @returns Devuelve una cadena con los datos del titular y el número de tarjeta ocultos.
    */
   ocultarDatos(titular: string, numero: string): string {
-    const numeroOculto = numero.replace(/.(?=.{4})/g, 'x');
+    const numeroOculto = numero.replace(/\d(?=.{4})/g, 'x');
     console.log('Datos bancarios ocultos:' + titular + ' ' + numeroOculto);
     return `Titular: ${titular}, 
     Número de Tarjeta: ${numeroOculto}`;

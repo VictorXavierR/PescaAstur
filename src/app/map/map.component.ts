@@ -141,7 +141,7 @@ export class MapComponent implements OnInit {
     this.initMap();
   }
 
-  private initMap(): void {
+  public initMap(): void {
     this.map = L.map('map').setView([43.3619, -5.8494], 10); // Latitud y longitud de Asturias, España
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -167,7 +167,7 @@ export class MapComponent implements OnInit {
     }, 100);
   }
 
-  private getWeather(lat: number, lon: number): void {
+  public getWeather(lat: number, lon: number): void {
     this.weather = {}; // Limpiar datos existentes
     this.lineChartData = {
       labels: [],
@@ -245,7 +245,7 @@ export class MapComponent implements OnInit {
     });
   }
 
-  private getMarineWeather(lat: number, lon: number): void {
+  public getMarineWeather(lat: number, lon: number): void {
     this.marineWeather = {}; // Limpiar datos existentes
     this.lineChartMarineData = {
       labels: [],
@@ -328,7 +328,7 @@ export class MapComponent implements OnInit {
     });
   }
 
-  private handleMapClick(lat: number, lng: number): void {
+  public handleMapClick(lat: number, lng: number): void {
     // Eliminar el marcador existente si existe
     if (this.waypointMarker) {
       this.map.removeLayer(this.waypointMarker);

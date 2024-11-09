@@ -67,10 +67,12 @@ export class CheckInComponent implements OnInit {
       // Crear un FileReader para leer el contenido del archivo
       const reader = new FileReader();
       reader.onload = () => {
-        const imagePreview = document.getElementById('imagePreview') as HTMLImageElement;
+        const imagePreview = document.getElementById('imagePreview') as HTMLImageElement | null;
         if (imagePreview) {
           // Mostrar la imagen previsualizada
-          imagePreview.src = reader.result as string;
+          imagePreview!.src = reader.result as string;
+        }else {
+          console.error('Elemento imagePreview no encontrado');
         }
       };
 
