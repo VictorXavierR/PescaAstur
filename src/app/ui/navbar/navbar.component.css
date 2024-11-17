@@ -1,5 +1,6 @@
 .navbar-custom {
-    height: 30px; /* Ajusta esta altura según tus necesidades */
+    /*height: 30px; /* Ajusta esta altura según tus necesidades */
+    position: relative;
   }
   
   .navbar-custom .navbar-brand,
@@ -11,3 +12,51 @@
     padding-top: 0;
     padding-bottom: 0;
   }
+
+/* Estilos específicos para el menú en dispositivos pequeños */
+.navbar-custom .menu-icon {
+  display: none;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* Estilos del menú en dispositivos pequeños */
+@media screen and (max-width: 768px) {
+  /* El menú se posiciona a la derecha */
+  .navbar-custom .navbar-collapse {
+    position: absolute;
+    top: 50px; /* Coloca el menú justo debajo de la barra de navegación */
+    right: 0; /* Alineado a la derecha */
+    width: 200px; /* Ajusta el tamaño del menú */
+    background-color: #333; /* Fondo oscuro */
+    border: 2px solid #fff; /* Borde blanco */
+    padding: 10px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5); /* Sombra para el efecto de recuadro */
+    list-style: none;
+    margin: 0;
+    z-index: 1050; /* Asegura que el menú esté por encima de otros elementos */
+  }
+
+  .navbar-custom .navbar-nav li {
+    margin: 10px 0;
+  }
+
+  .navbar-custom .navbar-nav a {
+    color: white;
+    text-decoration: none;
+  }
+
+  /* Mostrar el icono del menú (hamburguesa) */
+  .navbar-toggler {
+    display: block;
+  }
+
+  /* Bootstrap maneja automáticamente la visibilidad del menú usando la clase 'collapse' */
+  .navbar-custom .navbar-collapse.collapse {
+    display: none; /* Ocultar el menú por defecto */
+  }
+
+  .navbar-custom .navbar-collapse.show {
+    display: block; /* Mostrar el menú cuando se hace clic en el icono */
+  }
+}
