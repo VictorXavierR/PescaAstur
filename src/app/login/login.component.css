@@ -6,8 +6,18 @@
     background-position: center; /* Posición centrada */
     height: 100vh; /* Altura del 100% de la ventana */
     width: 100vw; /* Ancho del 100% de la ventana */
-    margin: 0; /* Sin márgenes externos */
+    margin-left: 200; /* Sin márgenes externos */
     display: flex; /* Usa el modelo de caja flexible */
     justify-content: center; /* Centra horizontalmente */
     align-items: center; /* Centra verticalmente */
+}
+@media only screen and (min-width: 1536px) {
+    button.btn.btn-link.btn-floating.mx-1.active {
+        position: relative !important; 
+        top: -2vh !important;
+    }
+    button.btn.btn-link.btn-floating.mx-1 {
+        position: relative !important; 
+        top: -2vh !important;
+    }
 }

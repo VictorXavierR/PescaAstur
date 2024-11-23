@@ -9,13 +9,13 @@
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" style="color: #00FF00;" [routerLink]="'/home'"><b>Inicio</b></a>
+                    <a class="nav-link" style="color: #FFD700;" [routerLink]="'/home'"><b>Inicio</b></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" style="color: #00FF00;" [routerLink]="'/map'"><b>¿Es un buen dia para pescar?</b></a>
+                    <a class="nav-link" style="color: #FFD700;" [routerLink]="'/map'"><b>¿Es un buen dia para pescar?</b></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" style="color: #00FF00;" [routerLink]="'/productlist'"><b>Tienda</b></a>
+                    <a class="nav-link" style="color: #FFD700;" [routerLink]="'/productlist'"><b>Tienda</b></a>
                 </li>
             </ul>
             <ul class="navbar-nav me-5">
@@ -25,11 +25,11 @@
                         <img [src]="userImageUrl" alt="Logo" style="width: 25px; margin-bottom: 5px;">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdown">
-                        <li *ngIf="!isLoggedIn"><a class="dropdown-item" [routerLink]="'/login'" style="color: #00FF00;">Login</a></li>
-                        <li *ngIf="isLoggedIn"><a class="dropdown-item" [routerLink]="'/userprofile'" style="color: #00FF00;">Perfil del
+                        <li *ngIf="!isLoggedIn"><a class="dropdown-item" [routerLink]="'/login'" style="color: #000000;">Login</a></li>
+                        <li *ngIf="isLoggedIn"><a class="dropdown-item" [routerLink]="'/userprofile'" style="color: #000000;">Perfil del
                                 usuario</a></li>
                         <li *ngIf="isLoggedIn"><a type="button" class="dropdown-item" (click)="logout()"
-                                [routerLink]="'/login'" style="color: #00FF00;">Logout</a></li>
+                                [routerLink]="'/login'" style="color: #000000;">Logout</a></li>
                     </ul>
                 </li>
                 <li><button routerLink="/cart" class="btn btn-link p-0">

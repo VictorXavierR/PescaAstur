@@ -139,13 +139,20 @@ export class CheckInComponent implements OnInit {
       method: 'POST',
       body: formData
     })
-      .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        alert("Error al registrar al usuario");
+        // Si el código HTTP no es exitoso (200-299), lanzar un error
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json(); // Procesar como JSON si no hay errores
+      })
       .then(data => {
-        console.log(data);
+        console.log(data , "Satisfactorio");
         this.router.navigate(['/login']);
       })
       .catch(error => {
-        console.error(error);
+        console.error(error , "Error");
       });
   }
   /**
