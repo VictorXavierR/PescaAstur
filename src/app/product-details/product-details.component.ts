@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Product } from '../model/product';
 import { ProductService } from '../service/product.service';
 
+
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
@@ -29,9 +30,6 @@ export class ProductDetailsComponent implements OnInit {
 
     // Devuelve el precio con el símbolo al final
     return formattedPrice.replace('€', '') + '€';
-  }
-  addToCart(product: Product){
-    console.log(product);
   }
   getAverageRating(ratings: number[]): number {
     const total = ratings.reduce((sum, rating) => sum + rating, 0);
